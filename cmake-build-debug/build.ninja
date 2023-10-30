@@ -164,7 +164,7 @@ build four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp | ${cmake_ninja_workdir}four
 #############################################
 # Phony custom command for CMakeFiles/four_grid_autogen_timestamp_deps
 
-build CMakeFiles/four_grid_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/four_grid_autogen_timestamp_deps: phony /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/moc /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/uic
+build CMakeFiles/four_grid_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/four_grid_autogen_timestamp_deps: phony /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/moc /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/uic /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2
 
 
 #############################################
