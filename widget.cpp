@@ -55,6 +55,7 @@ void Widget::parse_json(const char *filename) {
     QJsonArray aodvNodePos = aodvObj.value("Node_positon").toArray();
 
     double sim_time = aquaObj["sim_time"].toDouble();
+
     // 时间戳总共是 1s 100 个
     // 额外多加一些防止越界
     int frame_num = (int)(sim_time * 100) + 1000;
@@ -608,7 +609,14 @@ void Widget::parse_json(const char *filename) {
 }
 
 Widget::Widget(QWidget *parent) : QWidget(parent) {
-    this->resize(2000, 2000);
+
+
+
+    x_coefficient = 1.0*cur_width/default_width;
+    y_coefficient = 1.0*cur_height/default_height;
+    qDebug() << "create Widget!" << " x_coefficient = " <<x_coefficient << ", y_coefficient = " << y_coefficient;
+    // this->resize(2000, 2000);
+
     btn1 = new QPushButton("Start", this);
     btn2 = new QPushButton("Stop", this);
     btn3 = new QPushButton("Cut Show", this);
@@ -639,23 +647,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     canvas_height = 223;
     canvas_width = 1000;
     // 设置宽度。
-    parallelogram_sky.moveTo(200, 50);
-    parallelogram_sky.lineTo(1200, 50);
-    parallelogram_sky.lineTo(1100, 250);
-    parallelogram_sky.lineTo(100, 250);
-    parallelogram_sky.lineTo(200, 50);
+    this->drawScene();
 
-    parallelogram_land.moveTo(200, 300);
-    parallelogram_land.lineTo(1200, 300);
-    parallelogram_land.lineTo(1100, 500);
-    parallelogram_land.lineTo(100, 500);
-    parallelogram_land.lineTo(200, 300);
 
-    parallelogram_underwater.moveTo(200, 550);
-    parallelogram_underwater.lineTo(1200, 550);
-    parallelogram_underwater.lineTo(1100, 750);
-    parallelogram_underwater.lineTo(100, 750);
-    parallelogram_underwater.lineTo(200, 550);
 
     pix_img1 = QPixmap("/home/eynnzerr/open/JetBrainsWorkSpace/CLion/ns338/"
                        "Painter10.13/source/auv.png");
@@ -679,7 +673,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
 
     char *filename = "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/"
                      "ns-allinone-3.38/ns-3.38/2d-plot.json";
-    this->parse_json(filename);
+    // this->parse_json(filename);
 
     // Create a timer to refresh the points every 20ms
     connect(btn1, &QPushButton::clicked, [=]() {
@@ -691,6 +685,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
         connect(btn2, &QPushButton::clicked, timer, &QTimer::stop);
     });
     connect(btn3, &QPushButton::clicked, [=]() { showPosition(); });
+
 }
 
 Widget::~Widget() {}
@@ -705,6 +700,38 @@ void Widget::updatePosition() {
     QString frame = QString::number(currentTimestamp, 10);
     label2->setText(frame);
     update();
+}
+
+void Widget::setCoefficient(int cur_w, int cur_h) {
+    cur_width = cur_w; cur_height = cur_h;
+    x_coefficient = 1.0*cur_width/default_width;
+    y_coefficient = 1.0*cur_height/default_height;
+    this->clearScene();
+    this->drawScene();
+}
+
+void Widget::clearScene() {
+    parallelogram_sky.clear();
+}
+
+void Widget::drawScene () {
+    parallelogram_sky.moveTo(200*x_coefficient, 50*y_coefficient);
+    parallelogram_sky.lineTo(1200*x_coefficient, 50*y_coefficient);
+    parallelogram_sky.lineTo(1100*x_coefficient, 250*y_coefficient);
+    parallelogram_sky.lineTo(100*x_coefficient, 250*y_coefficient);
+    parallelogram_sky.lineTo(200*x_coefficient, 50*y_coefficient);
+
+    // parallelogram_land.moveTo(200, 300);
+    // parallelogram_land.lineTo(1200, 300);
+    // parallelogram_land.lineTo(1100, 500);
+    // parallelogram_land.lineTo(100, 500);
+    // parallelogram_land.lineTo(200, 300);
+
+    // parallelogram_underwater.moveTo(200, 550);
+    // parallelogram_underwater.lineTo(1200, 550);
+    // parallelogram_underwater.lineTo(1100, 750);
+    // parallelogram_underwater.lineTo(100, 750);
+    // parallelogram_underwater.lineTo(200, 550);
 }
 
 void Widget::DrawLineWithArrow(QPainter &painter, QPen pen, QPoint start,
@@ -798,13 +825,13 @@ void Widget::paintEvent(QPaintEvent *event) {
         }
     }
 
-    int cur_second = currentTimestamp / 100;
-    if (cur_second > aqua_line_message.size()) {
+    // int cur_second = currentTimestamp / 100;
+    // if (cur_second > aqua_line_message.size()) {
 
-    } else {
-        lines_aodv = aodv_line_message[cur_second];
-        lines_aqua = aqua_line_message[cur_second];
-    }
+    // } else {
+    //     lines_aodv = aodv_line_message[cur_second];
+    //     lines_aqua = aqua_line_message[cur_second];
+    // }
     // const TimePoint &timePoints = allMessage[currentTimestamp];
     // const QVector<Point>& points = timePoints.points;
 

@@ -7,6 +7,8 @@
 #include <QProgressBar>
 #include <QGridLayout>
 #include <QTimer>
+#include "widget.h"
+
 
 class FourGrid : public QWidget
 {
@@ -21,6 +23,9 @@ private:
     QPushButton *btnStart;
     QPushButton *btnStop;
     QProgressBar *progressBar;
+
+    Widget *w;
+
     QLabel *label1;
     QLabel *label2;
     QLabel *label3;
@@ -30,7 +35,8 @@ private:
     void initSignalSlots();
     static void addContentToFrame(QFrame *frame, QWidget *widget);
     void addContentToFrame(QWidget *widget, int row, int col);
-
+    
+    virtual void resizeEvent(QResizeEvent *event) override;
 public:
     explicit FourGrid(QWidget *parent = nullptr);
     ~FourGrid() override;

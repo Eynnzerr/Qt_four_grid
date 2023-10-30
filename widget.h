@@ -49,6 +49,7 @@ struct TimeLine{
 
 private:
     int currentTimestamp = 0;
+    
     QTimer* timer;
     QPushButton* btn1;
     QPushButton* btn2;
@@ -93,6 +94,13 @@ private:
     // double node_pos;
     // QVector<QVector< QVector<int> >> all_node_pos;
 
+    int default_width  = 1200;
+    int default_height = 750;
+    int cur_width  = 385;
+    int cur_height = 269;
+    double x_coefficient;
+    double y_coefficient;
+
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
@@ -103,5 +111,8 @@ public:
     void showPosition();
     void DrawLineWithArrow(QPainter& painter, QPen pen, QPoint start, QPoint end);
 
+    void clearScene();
+    void drawScene ();
+    void setCoefficient(int cur_w, int cur_h);
 };
 #endif // WIDGET_H

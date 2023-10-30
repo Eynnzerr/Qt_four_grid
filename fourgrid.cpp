@@ -1,11 +1,13 @@
 #include "fourgrid.h"
 
+
 FourGrid::FourGrid(QWidget *parent)
     : QWidget(parent)
 {
     // set up timer
     currentTime = 0;
     totalTime = 10000;
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimeChanged()));
 
@@ -16,6 +18,8 @@ FourGrid::FourGrid(QWidget *parent)
 
 FourGrid::~FourGrid()
 = default;
+
+
 
 void FourGrid::setupUI()
 {
@@ -33,18 +37,33 @@ void FourGrid::setupUI()
             frame->setLineWidth(2);
             frames[row][col] = frame;
             fourGrids->addWidget(frame, row, col);
+
+            qDebug() << "width = " << frame->size().width()
+                     << ", heigth= " << frame->size().height();
+
+            // TODO: add child widget to each grid.
+            // QLabel *label = new QLabel("test");
+            // addContentToFrame(frame, label);
         }
     }
 
+
     // TODO: or setup child widget here.
-    label1 = new QLabel("test");
-    addContentToFrame(label1, 0, 0);
-    label2 = new QLabel("test");
-    addContentToFrame(label2, 0, 1);
-    label3 = new QLabel("test");
-    addContentToFrame(label3, 1, 0);
-    label4 = new QLabel("test");
-    addContentToFrame(label4, 1, 1);
+    // label1 = new QLabel("test");
+    // addContentToFrame(label1, 0, 0);
+    
+    w = new Widget();
+    addContentToFrame(w, 0, 0);
+
+    // label2 = new QLabel("test");
+    // addContentToFrame(label2, 0, 1);
+    // label3 = new QLabel("test");
+    // addContentToFrame(label3, 1, 0);
+    // label4 = new QLabel("test");
+    // addContentToFrame(label4, 1, 1);
+
+
+
 
     // set up header.
     auto *header = new QHBoxLayout;
@@ -66,6 +85,9 @@ void FourGrid::setupUI()
     setMinimumSize(800, 600);
 }
 
+
+
+
 // must have been called after setupUI() is called.
 void FourGrid::initSignalSlots()
 {
@@ -76,6 +98,7 @@ void FourGrid::initSignalSlots()
     connect(btnStop, &QPushButton::clicked, this, [=](){
         timer->stop();
     });
+
 }
 
 void FourGrid::addContentToFrame(QFrame *frame, QWidget *widget)
@@ -92,6 +115,15 @@ void FourGrid::addContentToFrame(QWidget *widget, int row, int col)
     addContentToFrame(frame, widget);
 }
 
+void FourGrid::resizeEvent(QResizeEvent *event)
+{
+    QFrame *frame = frames[0][0];
+    qDebug() << "widowSize changed! width = "
+                << frame->size().width()
+                << ", heigth= " << frame->size().height();
+    w->setCoefficient(frame->size().width(), frame->size().height());
+}
+
 void FourGrid::onTimeChanged()
 {
     currentTime += 1000;
@@ -104,8 +136,9 @@ void FourGrid::onTimeChanged()
     progressBar->setValue(currentTime);
 
     // TODO sub widgets should design their own slots and connect to timeout() of timer.
-    label1->setText(QString::number(currentTime / 1000));
-    label2->setText(QString::number(currentTime / 1000));
-    label3->setText(QString::number(currentTime / 1000));
-    label4->setText(QString::number(currentTime / 1000));
+
+    // label1->setText(QString::number(currentTime / 1000));
+    // label2->setText(QString::number(currentTime / 1000));
+    // label3->setText(QString::number(currentTime / 1000));
+    // label4->setText(QString::number(currentTime / 1000));
 }

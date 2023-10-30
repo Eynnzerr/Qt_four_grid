@@ -17,9 +17,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
-
-    Welcome w;
+    FourGrid w;
     w.show();
-
     return a.exec();
 }
