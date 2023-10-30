@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/welcome.qss</file>
+        <file>res/new.png</file>
+        <file>res/file_open.png</file>
+    </qresource>
+</RCC>

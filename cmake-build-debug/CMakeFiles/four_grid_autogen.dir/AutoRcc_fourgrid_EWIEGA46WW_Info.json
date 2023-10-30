@@ -1,0 +1,24 @@
+{
+	"BUILD_DIR" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/four_grid_autogen",
+	"CMAKE_BINARY_DIR" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest",
+	"CMAKE_SOURCE_DIR" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest",
+	"INCLUDE_DIR" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/four_grid_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/res/file_open.png",
+		"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/res/welcome.qss",
+		"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/res/new.png"
+	],
+	"LOCK_FILE" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/four_grid_autogen.dir/AutoRcc_fourgrid_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "fourgrid" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_fourgrid.cpp",
+	"RCC_EXECUTABLE" : "/home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/four_grid_autogen.dir/AutoRcc_fourgrid_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/fourgrid.qrc",
+	"VERBOSITY" : 0
+}
