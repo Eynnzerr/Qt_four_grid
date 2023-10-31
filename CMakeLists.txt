@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22)
 project(four_grid)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -20,6 +20,8 @@ add_executable(
         main.cpp
         fourgrid.cpp
         fourgrid.h
+        widget.cpp
+        widget.h
         welcome.cpp
         welcome.h
         fourgrid.qrc

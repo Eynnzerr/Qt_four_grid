@@ -37,12 +37,20 @@ void FourGrid::setupUI()
     }
 
     // TODO: or setup child widget here.
-    label1 = new QLabel("test");
-    addContentToFrame(label1, 0, 0);
+    // label1 = new QLabel("test");
+    // addContentToFrame(label1, 0, 0);
+    w1 = new Widget(0,1);
+    addContentToFrame(w1, 0, 0);
+
+    w2 = new Widget(1,0);
+    addContentToFrame(w2, 1, 0);
+
+
+
     label2 = new QLabel("test");
     addContentToFrame(label2, 0, 1);
-    label3 = new QLabel("test");
-    addContentToFrame(label3, 1, 0);
+    // label3 = new QLabel("test");
+    // addContentToFrame(label3, 1, 0);
     label4 = new QLabel("test");
     addContentToFrame(label4, 1, 1);
 
@@ -81,7 +89,7 @@ void FourGrid::initSignalSlots()
 void FourGrid::addContentToFrame(QFrame *frame, QWidget *widget)
 {
     auto *layout = new QVBoxLayout(frame);
-    layout->setAlignment(Qt::AlignCenter);
+    // layout->setAlignment(Qt::AlignCenter);
     layout->addWidget(widget);
     frame->setLayout(layout);
 }
@@ -90,6 +98,16 @@ void FourGrid::addContentToFrame(QWidget *widget, int row, int col)
 {
     QFrame *frame = frames[row][col];
     addContentToFrame(frame, widget);
+}
+
+void FourGrid::resizeEvent(QResizeEvent *event)
+{
+    QFrame *frame = frames[0][0];
+    qDebug() << "widowSize changed! width = "
+                << frame->size().width()
+                << ", heigth= " << frame->size().height();
+    w1->setCoefficient(frame->size().width(), frame->size().height());
+    w2->setCoefficient(frame->size().width(), frame->size().height());
 }
 
 void FourGrid::onTimeChanged()
@@ -104,8 +122,8 @@ void FourGrid::onTimeChanged()
     progressBar->setValue(currentTime);
 
     // TODO sub widgets should design their own slots and connect to timeout() of timer.
-    label1->setText(QString::number(currentTime / 1000));
+    // label1->setText(QString::number(currentTime / 1000));
     label2->setText(QString::number(currentTime / 1000));
-    label3->setText(QString::number(currentTime / 1000));
+    // label3->setText(QString::number(currentTime / 1000));
     label4->setText(QString::number(currentTime / 1000));
 }

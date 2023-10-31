@@ -22,6 +22,94 @@
 
 #include <set>
 
+
+
+Widget::Widget(QWidget *parent) : QWidget(parent) {
+    this->init_widget();
+}
+
+
+Widget::Widget(int topo, int packet, QWidget *parent): QWidget(parent) {
+    qDebug() << "topo = " << topo << ", packet = " << packet;
+    enable_topo   = topo;
+    enable_packet = packet;
+    this->init_widget();
+}
+Widget::~Widget() {}
+
+void Widget::init_widget () {
+    x_coefficient = 1.0*cur_width/default_width;
+    y_coefficient = 1.0*cur_height/default_height;
+    qDebug() << "create Widget!" << " x_coefficient = " <<x_coefficient << ", y_coefficient = " << y_coefficient;
+    // this->resize(2000, 2000);
+
+    btn1 = new QPushButton("Start", this);
+    btn2 = new QPushButton("Stop", this);
+    btn3 = new QPushButton("Cut Show", this);
+    lineEdit = new QLineEdit(this);
+
+    label1 = new QLabel(this);
+    label2 = new QLabel(this);
+    // output = new QTextEdit(this);
+    label1->setGeometry(360, 10, 50, 30);
+    label1->setText("Frame:");
+    label2->setGeometry(420, 10, 40, 30);
+
+    btn1->setGeometry(10, 10, 80, 30);
+    btn2->setGeometry(100, 10, 80, 30);
+    lineEdit->setGeometry(190, 10, 80, 30);
+    btn3->setGeometry(280, 10, 80, 30);
+
+    label2->setText("0");
+
+    // output->setGeometry(100, 770, 500, 75);
+
+    canvas_origin[0][0] = 100;
+    canvas_origin[0][1] = 250;
+    canvas_origin[1][0] = 100;
+    canvas_origin[1][1] = 500;
+    canvas_origin[2][0] = 100;
+    canvas_origin[2][1] = 750;
+    canvas_height = 223;
+    canvas_width = 1000;
+    // 设置宽度。
+    this->drawScene();
+
+
+
+    pix_img1 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/auv.png");
+    pix_img1 = pix_img1.scaled(50, 50);
+    pix_img2 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/uav.png");
+    pix_img2 = pix_img2.scaled(50, 50);
+    pix_img3 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/usv.png");
+    pix_img3 = pix_img3.scaled(50, 50);
+    pix_img4 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/test.jpg");
+    pix_img4 = pix_img4.scaled(50, 50);
+
+    double node_pos[100][5];
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 5; j++) {
+            node_pos[i][j] = 0;
+        }
+    }
+
+    char *filename = "/home/hylester/ns3/ns-allinone-3.38/ns-3.38/2d-plot.json";
+    this->parse_json(filename);
+
+    // Create a timer to refresh the points every 20ms
+    connect(btn1, &QPushButton::clicked, [=]() {
+        timer = new QTimer(this);
+
+        //    qDebug() << allMessage.size();
+        connect(timer, &QTimer::timeout, [=]() { updatePosition(); });
+        timer->start(10);
+        connect(btn2, &QPushButton::clicked, timer, &QTimer::stop);
+    });
+    connect(btn3, &QPushButton::clicked, [=]() { showPosition(); });
+
+}
+
+
 //     Add your points here or load them from a file/database.
 void Widget::parse_json(const char *filename) {
 
@@ -55,6 +143,7 @@ void Widget::parse_json(const char *filename) {
     QJsonArray aodvNodePos = aodvObj.value("Node_positon").toArray();
 
     double sim_time = aquaObj["sim_time"].toDouble();
+
     // 时间戳总共是 1s 100 个
     // 额外多加一些防止越界
     int frame_num = (int)(sim_time * 100) + 1000;
@@ -607,93 +696,6 @@ void Widget::parse_json(const char *filename) {
     // }
 }
 
-Widget::Widget(QWidget *parent) : QWidget(parent) {
-    this->resize(2000, 2000);
-    btn1 = new QPushButton("Start", this);
-    btn2 = new QPushButton("Stop", this);
-    btn3 = new QPushButton("Cut Show", this);
-    lineEdit = new QLineEdit(this);
-
-    label1 = new QLabel(this);
-    label2 = new QLabel(this);
-    // output = new QTextEdit(this);
-    label1->setGeometry(360, 10, 50, 30);
-    label1->setText("Frame:");
-    label2->setGeometry(420, 10, 40, 30);
-
-    btn1->setGeometry(10, 10, 80, 30);
-    btn2->setGeometry(100, 10, 80, 30);
-    lineEdit->setGeometry(190, 10, 80, 30);
-    btn3->setGeometry(280, 10, 80, 30);
-
-    label2->setText("0");
-
-    // output->setGeometry(100, 770, 500, 75);
-
-    canvas_origin[0][0] = 100;
-    canvas_origin[0][1] = 250;
-    canvas_origin[1][0] = 100;
-    canvas_origin[1][1] = 500;
-    canvas_origin[2][0] = 100;
-    canvas_origin[2][1] = 750;
-    canvas_height = 223;
-    canvas_width = 1000;
-    // 设置宽度。
-    parallelogram_sky.moveTo(200, 50);
-    parallelogram_sky.lineTo(1200, 50);
-    parallelogram_sky.lineTo(1100, 250);
-    parallelogram_sky.lineTo(100, 250);
-    parallelogram_sky.lineTo(200, 50);
-
-    parallelogram_land.moveTo(200, 300);
-    parallelogram_land.lineTo(1200, 300);
-    parallelogram_land.lineTo(1100, 500);
-    parallelogram_land.lineTo(100, 500);
-    parallelogram_land.lineTo(200, 300);
-
-    parallelogram_underwater.moveTo(200, 550);
-    parallelogram_underwater.lineTo(1200, 550);
-    parallelogram_underwater.lineTo(1100, 750);
-    parallelogram_underwater.lineTo(100, 750);
-    parallelogram_underwater.lineTo(200, 550);
-
-    pix_img1 = QPixmap("/home/eynnzerr/open/JetBrainsWorkSpace/CLion/ns338/"
-                       "Painter10.13/source/auv.png");
-    pix_img1 = pix_img1.scaled(50, 50);
-    pix_img2 = QPixmap("/home/eynnzerr/open/JetBrainsWorkSpace/CLion/ns338/"
-                       "Painter10.13/source/uav.png");
-    pix_img2 = pix_img2.scaled(50, 50);
-    pix_img3 = QPixmap("/home/eynnzerr/open/JetBrainsWorkSpace/CLion/ns338/"
-                       "Painter10.13/source/usv.png");
-    pix_img3 = pix_img3.scaled(50, 50);
-    pix_img4 = QPixmap("/home/eynnzerr/open/JetBrainsWorkSpace/CLion/ns338/"
-                       "Painter10.13/source/test.jpg");
-    pix_img4 = pix_img4.scaled(50, 50);
-
-    double node_pos[100][5];
-    for (int i = 0; i < 100; i++) {
-        for (int j = 0; j < 5; j++) {
-            node_pos[i][j] = 0;
-        }
-    }
-
-    char *filename = "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/"
-                     "ns-allinone-3.38/ns-3.38/2d-plot.json";
-    this->parse_json(filename);
-
-    // Create a timer to refresh the points every 20ms
-    connect(btn1, &QPushButton::clicked, [=]() {
-        timer = new QTimer(this);
-
-        //    qDebug() << allMessage.size();
-        connect(timer, &QTimer::timeout, [=]() { updatePosition(); });
-        timer->start(10);
-        connect(btn2, &QPushButton::clicked, timer, &QTimer::stop);
-    });
-    connect(btn3, &QPushButton::clicked, [=]() { showPosition(); });
-}
-
-Widget::~Widget() {}
 
 void Widget::updatePosition() {
     if (currentTimestamp < allMessage.size()) {
@@ -705,6 +707,40 @@ void Widget::updatePosition() {
     QString frame = QString::number(currentTimestamp, 10);
     label2->setText(frame);
     update();
+}
+
+void Widget::setCoefficient(int cur_w, int cur_h) {
+    cur_width = cur_w - 100; cur_height = cur_h - 100;
+    x_coefficient = 1.0*cur_width/default_width;
+    y_coefficient = 1.0*cur_height/default_height;
+    this->clearScene();
+    this->drawScene();
+}
+
+void Widget::clearScene() {
+    parallelogram_sky.clear();
+    parallelogram_land.clear();
+    parallelogram_underwater.clear();
+}
+
+void Widget::drawScene () {
+    parallelogram_sky.moveTo(200*x_coefficient, 50*y_coefficient);
+    parallelogram_sky.lineTo(1200*x_coefficient, 50*y_coefficient);
+    parallelogram_sky.lineTo(1100*x_coefficient, 250*y_coefficient);
+    parallelogram_sky.lineTo(100*x_coefficient, 250*y_coefficient);
+    parallelogram_sky.lineTo(200*x_coefficient, 50*y_coefficient);
+
+    parallelogram_land.moveTo(200*x_coefficient, 300*y_coefficient);
+    parallelogram_land.lineTo(1200*x_coefficient, 300*y_coefficient);
+    parallelogram_land.lineTo(1100*x_coefficient, 500*y_coefficient);
+    parallelogram_land.lineTo(100*x_coefficient, 500*y_coefficient);
+    parallelogram_land.lineTo(200*x_coefficient, 300*y_coefficient);
+
+    parallelogram_underwater.moveTo(200*x_coefficient, 550*y_coefficient);
+    parallelogram_underwater.lineTo(1200*x_coefficient, 550*y_coefficient);
+    parallelogram_underwater.lineTo(1100*x_coefficient, 750*y_coefficient);
+    parallelogram_underwater.lineTo(100*x_coefficient, 750*y_coefficient);
+    parallelogram_underwater.lineTo(200*x_coefficient, 550*y_coefficient);
 }
 
 void Widget::DrawLineWithArrow(QPainter &painter, QPen pen, QPoint start,
@@ -761,8 +797,8 @@ void Widget::paintEvent(QPaintEvent *event) {
         const QVector<Point> &points = timePoints.points;
 
         for (const Point &point : points) {
-            double x = point.x;
-            double y = point.y;
+            double x = point.x*x_coefficient;
+            double y = point.y*y_coefficient;
             if (point.node_type == 1) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
@@ -776,15 +812,16 @@ void Widget::paintEvent(QPaintEvent *event) {
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img3);
             } else if (point.node_type == 996) {
-                int first = (int)x;
-                int second = (int)y;
+                if (!enable_packet) continue;
+                int first = (int)point.x;
+                int second = (int)point.y;
                 if (first == second) {
                     continue;
                 }
-                int x1 = points[first - 1].x;
-                int y1 = points[first - 1].y;
-                int x2 = points[second - 1].x;
-                int y2 = points[second - 1].y;
+                int x1 = points[first - 1].x *x_coefficient;
+                int y1 = points[first - 1].y *y_coefficient;
+                int x2 = points[second - 1].x *x_coefficient;
+                int y2 = points[second - 1].y *y_coefficient;
                 // pen2.setColor(QColor(line.color_r, line.color_g,
                 // line.color_b));
                 DrawLineWithArrow(painter, pen2, QPoint(x1, y1),
@@ -797,6 +834,7 @@ void Widget::paintEvent(QPaintEvent *event) {
             }
         }
     }
+    if (!enable_topo) return;
 
     int cur_second = currentTimestamp / 100;
     if (cur_second > aqua_line_message.size()) {
@@ -805,28 +843,28 @@ void Widget::paintEvent(QPaintEvent *event) {
         lines_aodv = aodv_line_message[cur_second];
         lines_aqua = aqua_line_message[cur_second];
     }
-    // const TimePoint &timePoints = allMessage[currentTimestamp];
-    // const QVector<Point>& points = timePoints.points;
+    const TimePoint &timePoints = allMessage[currentTimestamp];
+    const QVector<Point>& points = timePoints.points;
 
-    // for (const Line& line : lines_aqua.lines) {
-    //     int first = line.begin_id;
-    //     int second = line.end_id;
-    //     int x1 = points[first].x;
-    //     int y1 = points[first].y;
-    //     int x2 = points[second].x;
-    //     int y2 = points[second].y;
-    //     pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
-    //     DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2));
-    // }
+    for (const Line& line : lines_aqua.lines) {
+        int first = line.begin_id;
+        int second = line.end_id;
+        int x1 = points[first].x*x_coefficient;
+        int y1 = points[first].y*y_coefficient;
+        int x2 = points[second].x*x_coefficient;
+        int y2 = points[second].y*y_coefficient;
+        pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
+        DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2));
+    }
 
-    // for (const Line& line : lines_aodv.lines) {
-    //     int first = line.begin_id;
-    //     int second = line.end_id;
-    //     int x1 = points[first].x;
-    //     int y1 = points[first].y;
-    //     int x2 = points[second].x;
-    //     int y2 = points[second].y;
-    //     pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
-    //     DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2));
-    // }
+    for (const Line& line : lines_aodv.lines) {
+        int first = line.begin_id;
+        int second = line.end_id;
+        int x1 = points[first].x*x_coefficient;
+        int y1 = points[first].y*y_coefficient;
+        int x2 = points[second].x*x_coefficient;
+        int y2 = points[second].y*y_coefficient;
+        pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
+        DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2));
+    }
 }
