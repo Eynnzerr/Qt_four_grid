@@ -62,10 +62,10 @@ void Welcome::setupUI() {
 
     setLayout(vLayout);
     setMinimumSize(640, 480);
+    setWindowTitle("Welcome to network simulator!");
 
     QFile qss(":/res/welcome.qss");
     if (qss.open(QFile::ReadOnly)) {
-
         QString stylesheet = QLatin1String(qss.readAll());
         setStyleSheet(stylesheet);
         qss.close();
@@ -74,7 +74,7 @@ void Welcome::setupUI() {
 
 void Welcome::initSignalSlots() {
     connect(btnNew, &QPushButton::clicked, [=] {
-        auto *next = new FourGrid;
+        auto *next = new Configuration;
         close();
         next->show();
     });

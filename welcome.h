@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include "fourgrid.h"
+#include "Configuration.h"
 
 class Welcome: public QWidget
 {
@@ -23,6 +24,7 @@ private:
     QPushButton *btnNew;
     QPushButton *btnHistory;
 
+    // TODO 抽出一个Widget基类，使用模版模式
     void setupUI();
     void initSignalSlots();
 
