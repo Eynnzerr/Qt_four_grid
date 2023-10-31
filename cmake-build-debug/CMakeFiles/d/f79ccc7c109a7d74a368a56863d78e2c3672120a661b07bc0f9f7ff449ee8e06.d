@@ -18,6 +18,10 @@ four_grid_autogen/timestamp: \
   /home/eynnzerr/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux.cmake \
   /home/eynnzerr/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/UnixPaths.cmake \
   /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/CMakeLists.txt \
+  /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/Configuration.cpp \
+  /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/Configuration.h \
+  /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/NodeConfigItem.cpp \
+  /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/NodeConfigItem.h \
   CMakeFiles/3.25.2/CMakeCCompiler.cmake \
   CMakeFiles/3.25.2/CMakeCXXCompiler.cmake \
   CMakeFiles/3.25.2/CMakeSystem.cmake \
@@ -29,7 +33,9 @@ four_grid_autogen/timestamp: \
   /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/welcome.cpp \
   /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/welcome.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/QFile \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/QRegularExpression \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/QTimer \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qabstractitemmodel.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qalgorithms.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qarraydata.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qatomic.h \
@@ -55,10 +61,13 @@ four_grid_autogen/timestamp: \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qhash.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qhashfunctions.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qiodevice.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qitemselectionmodel.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qiterator.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qline.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qlist.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qlocale.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qlogging.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qmap.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qmargins.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qmetatype.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qnamespace.h \
@@ -73,7 +82,9 @@ four_grid_autogen/timestamp: \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qrect.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qrefcount.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qregexp.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qregularexpression.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qscopedpointer.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qset.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qshareddata.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer_impl.h \
@@ -90,6 +101,7 @@ four_grid_autogen/timestamp: \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qtimer.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qtypeinfo.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qurl.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qvariant.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qvarlengtharray.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qvector.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore/qversiontagging.h \
@@ -105,36 +117,64 @@ four_grid_autogen/timestamp: \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qmatrix.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qpaintdevice.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qpalette.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qpen.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qpixelformat.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qpixmap.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qpolygon.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qregion.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qrgb.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qrgba64.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qtextcursor.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qtextformat.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qtextoption.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qtgui-config.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qtguiglobal.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qtransform.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qvalidator.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui/qwindowdefs.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QComboBox \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QFileDialog \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QFormLayout \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QGridLayout \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QHBoxLayout \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QLabel \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QLayout \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QLineEdit \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QListWidget \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QProgressBar \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QPushButton \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QScrollArea \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QVBoxLayout \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/QWidget \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractbutton.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractitemview.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractslider.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractspinbox.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qboxlayout.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qcombobox.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qdialog.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qfiledialog.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qformlayout.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qframe.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qgridlayout.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qlabel.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qlayout.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qlayoutitem.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qlineedit.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qlistview.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qlistwidget.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qprogressbar.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qpushbutton.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qrubberband.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qscrollarea.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qsizepolicy.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qslider.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qstyle.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qstyleoption.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qtabbar.h \
+  /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qtabwidget.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgets-config.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
   /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets/qwidget.h \

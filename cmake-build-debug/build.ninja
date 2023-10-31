@@ -81,6 +81,22 @@ build CMakeFiles/four_grid.dir/welcome.cpp.o: CXX_COMPILER__four_grid_Debug /hom
   OBJECT_DIR = CMakeFiles/four_grid.dir
   OBJECT_FILE_DIR = CMakeFiles/four_grid.dir
 
+build CMakeFiles/four_grid.dir/Configuration.cpp.o: CXX_COMPILER__four_grid_Debug /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/Configuration.cpp || cmake_object_order_depends_target_four_grid
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles/four_grid.dir/Configuration.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -fPIC -std=gnu++17
+  INCLUDES = -I/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/four_grid_autogen/include -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/./mkspecs/linux-g++ -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets
+  OBJECT_DIR = CMakeFiles/four_grid.dir
+  OBJECT_FILE_DIR = CMakeFiles/four_grid.dir
+
+build CMakeFiles/four_grid.dir/NodeConfigItem.cpp.o: CXX_COMPILER__four_grid_Debug /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/NodeConfigItem.cpp || cmake_object_order_depends_target_four_grid
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles/four_grid.dir/NodeConfigItem.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -fPIC -std=gnu++17
+  INCLUDES = -I/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/four_grid_autogen/include -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtCore -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/./mkspecs/linux-g++ -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtGui -isystem /home/eynnzerr/open/Qt/5.15.2/gcc_64/include/QtWidgets
+  OBJECT_DIR = CMakeFiles/four_grid.dir
+  OBJECT_FILE_DIR = CMakeFiles/four_grid.dir
+
 build CMakeFiles/four_grid.dir/four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp.o: CXX_COMPILER__four_grid_Debug /home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp || cmake_object_order_depends_target_four_grid
   DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB
   DEP_FILE = CMakeFiles/four_grid.dir/four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp.o.d
@@ -97,7 +113,7 @@ build CMakeFiles/four_grid.dir/four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp.o: 
 #############################################
 # Link the executable four_grid
 
-build four_grid: CXX_EXECUTABLE_LINKER__four_grid_Debug CMakeFiles/four_grid.dir/four_grid_autogen/mocs_compilation.cpp.o CMakeFiles/four_grid.dir/main.cpp.o CMakeFiles/four_grid.dir/fourgrid.cpp.o CMakeFiles/four_grid.dir/welcome.cpp.o CMakeFiles/four_grid.dir/four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp.o | /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2 || four_grid_autogen four_grid_autogen_timestamp_deps
+build four_grid: CXX_EXECUTABLE_LINKER__four_grid_Debug CMakeFiles/four_grid.dir/four_grid_autogen/mocs_compilation.cpp.o CMakeFiles/four_grid.dir/main.cpp.o CMakeFiles/four_grid.dir/fourgrid.cpp.o CMakeFiles/four_grid.dir/welcome.cpp.o CMakeFiles/four_grid.dir/Configuration.cpp.o CMakeFiles/four_grid.dir/NodeConfigItem.cpp.o CMakeFiles/four_grid.dir/four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp.o | /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2 || four_grid_autogen four_grid_autogen_timestamp_deps
   FLAGS = -g
   LINK_LIBRARIES = -Wl,-rpath,/home/eynnzerr/open/Qt/5.15.2/gcc_64/lib  /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2  /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2  /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2
   OBJECT_DIR = CMakeFiles/four_grid.dir
@@ -164,7 +180,7 @@ build four_grid_autogen/EWIEGA46WW/qrc_fourgrid.cpp | ${cmake_ninja_workdir}four
 #############################################
 # Phony custom command for CMakeFiles/four_grid_autogen_timestamp_deps
 
-build CMakeFiles/four_grid_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/four_grid_autogen_timestamp_deps: phony /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/moc /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/uic /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2
+build CMakeFiles/four_grid_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/four_grid_autogen_timestamp_deps: phony /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/uic /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Core.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Gui.so.5.15.2 /home/eynnzerr/open/Qt/5.15.2/gcc_64/bin/moc /home/eynnzerr/open/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so.5.15.2
 
 
 #############################################

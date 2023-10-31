@@ -93,6 +93,18 @@
 	"HEADERS" : 
 	[
 		[
+			"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/Configuration.h",
+			"MU",
+			"EWIEGA46WW/moc_Configuration.cpp",
+			null
+		],
+		[
+			"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/NodeConfigItem.h",
+			"MU",
+			"EWIEGA46WW/moc_NodeConfigItem.cpp",
+			null
+		],
+		[
 			"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/fourgrid.h",
 			"MU",
 			"EWIEGA46WW/moc_fourgrid.cpp",
@@ -155,6 +167,16 @@
 	"SETTINGS_FILE" : "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/four_grid_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/Configuration.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/NodeConfigItem.cpp",
+			"MU",
+			null
+		],
 		[
 			"/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/fourgrid.cpp",
 			"MU",

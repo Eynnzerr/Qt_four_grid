@@ -23,7 +23,11 @@ add_executable(
         welcome.cpp
         welcome.h
         fourgrid.qrc
-        )
+        Configuration.cpp
+        Configuration.h
+        NodeConfigItem.cpp
+        NodeConfigItem.h
+)
 
 target_link_libraries(four_grid
         Qt5::Core
