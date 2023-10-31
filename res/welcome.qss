@@ -1,9 +1,0 @@
-QPushButton {
-    background-color: dodgerblue;
-    border-radius: 6px;
-}
-
-QPushButton:hover {
-    background-color: darkblue;
-    border-radius: 6px;
-}

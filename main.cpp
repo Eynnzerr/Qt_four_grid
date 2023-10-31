@@ -1,4 +1,4 @@
-#include "welcome.h"
+#include "fourgrid.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
             break;
         }
     }
+    
     FourGrid w;
     w.show();
+    
     return a.exec();
 }

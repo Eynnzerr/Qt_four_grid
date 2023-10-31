@@ -17,20 +17,21 @@ FourGrid::FourGrid(QWidget *parent)
 }
 
 FourGrid::~FourGrid()
-= default;
+{
+}
 
 
 
 void FourGrid::setupUI()
 {
     // set up four grids and sub widgets
-    auto *fourGrids = new QGridLayout;
+    QGridLayout *fourGrids = new QGridLayout;
 
     for (int row = 0; row < 2; ++row)
     {
         for (int col = 0; col < 2; ++col)
         {
-            auto *frame = new QFrame;
+            QFrame *frame = new QFrame;
             frame->setFrameStyle(QFrame::Box);
             frame->setStyleSheet("background-color:white;");
             frame->setFrameShape(QFrame::Panel);
@@ -66,7 +67,7 @@ void FourGrid::setupUI()
 
 
     // set up header.
-    auto *header = new QHBoxLayout;
+    QHBoxLayout *header = new QHBoxLayout;
     header->setSpacing(4);
     btnStart = new QPushButton("start");
     btnStop = new QPushButton("stop");
@@ -76,7 +77,7 @@ void FourGrid::setupUI()
     header->addWidget(btnStop);
     header->addWidget(progressBar);
 
-    auto *vLayout = new QVBoxLayout;
+    QVBoxLayout *vLayout = new QVBoxLayout;
     vLayout->setSpacing(8);
     vLayout->addLayout(header);
     vLayout->addLayout(fourGrids);
@@ -88,7 +89,7 @@ void FourGrid::setupUI()
 
 
 
-// must have been called after setupUI() is called.
+// must been called after setupUI() is called.
 void FourGrid::initSignalSlots()
 {
     // initialize diy signals and connect to slots.
@@ -103,8 +104,8 @@ void FourGrid::initSignalSlots()
 
 void FourGrid::addContentToFrame(QFrame *frame, QWidget *widget)
 {
-    auto *layout = new QVBoxLayout(frame);
-    layout->setAlignment(Qt::AlignCenter);
+    QVBoxLayout *layout = new QVBoxLayout(frame);
+    // layout->setAlignment(Qt::AlignCenter);
     layout->addWidget(widget);
     frame->setLayout(layout);
 }

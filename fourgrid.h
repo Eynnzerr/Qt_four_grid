@@ -33,13 +33,13 @@ private:
 
     void setupUI();
     void initSignalSlots();
-    static void addContentToFrame(QFrame *frame, QWidget *widget);
+    void addContentToFrame(QFrame *frame, QWidget *widget);
     void addContentToFrame(QWidget *widget, int row, int col);
     
     virtual void resizeEvent(QResizeEvent *event) override;
 public:
-    explicit FourGrid(QWidget *parent = nullptr);
-    ~FourGrid() override;
+    FourGrid(QWidget *parent = nullptr);
+    ~FourGrid();
 
 public slots:
     void onTimeChanged();

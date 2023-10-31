@@ -715,6 +715,8 @@ void Widget::clearScene() {
 }
 
 void Widget::drawScene () {
+    qDebug() << "Widget::drawScene";
+
     parallelogram_sky.moveTo(200*x_coefficient, 50*y_coefficient);
     parallelogram_sky.lineTo(1200*x_coefficient, 50*y_coefficient);
     parallelogram_sky.lineTo(1100*x_coefficient, 250*y_coefficient);
