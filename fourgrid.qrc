@@ -3,5 +3,9 @@
         <file>res/welcome.qss</file>
         <file>res/new.png</file>
         <file>res/file_open.png</file>
+        <file>res/auv.png</file>
+        <file>res/test.jpg</file>
+        <file>res/uav.png</file>
+        <file>res/usv.png</file>
     </qresource>
 </RCC>

@@ -75,15 +75,13 @@ void Widget::init_widget () {
     // 设置宽度。
     this->drawScene();
 
-
-
-    pix_img1 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/auv.png");
+    pix_img1 = QPixmap(":/res/auv.png");
     pix_img1 = pix_img1.scaled(50, 50);
-    pix_img2 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/uav.png");
+    pix_img2 = QPixmap(":/res/uav.png");
     pix_img2 = pix_img2.scaled(50, 50);
-    pix_img3 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/usv.png");
+    pix_img3 = QPixmap(":/res/usv.png");
     pix_img3 = pix_img3.scaled(50, 50);
-    pix_img4 = QPixmap("/home/hylester/finish_vis/Qt_four_grid/res/test.jpg");
+    pix_img4 = QPixmap(":/test.jpg");
     pix_img4 = pix_img4.scaled(50, 50);
 
     double node_pos[100][5];
@@ -93,7 +91,8 @@ void Widget::init_widget () {
         }
     }
 
-    char *filename = "/home/hylester/ns3/ns-allinone-3.38/ns-3.38/2d-plot.json";
+    // char *filename = "/home/hylester/ns3/ns-allinone-3.38/ns-3.38/2d-plot.json";
+    char *filename = "/home/eynnzerr/open/JetBrainsWorkSpace/CLion/ns-allinone-3.38/ns-3.38/2d-plot.json";
     this->parse_json(filename);
 
     // Create a timer to refresh the points every 20ms

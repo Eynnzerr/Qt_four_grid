@@ -12,6 +12,7 @@ find_package(Qt5 COMPONENTS
         Core
         Gui
         Widgets
+        Charts
         REQUIRED)
 add_executable(
         four_grid
@@ -33,4 +34,5 @@ target_link_libraries(four_grid
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
+        Qt5::Charts
         )
