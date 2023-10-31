@@ -187,8 +187,8 @@ void Widget::parse_json(const char *filename) {
         double y = cur_pos["position_y"].toDouble();
         double z = cur_pos["position_z"].toDouble();
 
-        qDebug() << "node_id = " << node_id << ", x = " << x
-                 << ", y = " << y + z;
+        // qDebug() << "node_id = " << node_id << ", x = " << x
+        //          << ", y = " << y + z;
         aodv_node_index_set.insert(node_id);
 
         node_pos[node_id][0] = 0;
@@ -320,9 +320,9 @@ void Widget::parse_json(const char *filename) {
             // cur_time.length();
 
             int cur_frame = cur_time.toInt();
-            qDebug() << "node-id = " << cur_node_id_num
-                     << ", cur_frame = " << cur_frame << ", x = " << cur_pos_x
-                     << ", y = " << cur_pos_y << ", z = " << cur_pos_z;
+            // qDebug() << "node-id = " << cur_node_id_num
+            //          << ", cur_frame = " << cur_frame << ", x = " << cur_pos_x
+            //          << ", y = " << cur_pos_y << ", z = " << cur_pos_z;
 
             // 坐标变换启动
             double x_equal = canvas_width / x_total * (cur_pos_x - min_x);
@@ -380,10 +380,10 @@ void Widget::parse_json(const char *filename) {
                 }
                 if (diff == 0)
                     continue;
-                qDebug() << "frame-" << i
-                         << ", new pos, x = " << allMessage[i].points[j].x
-                         << ", old pos, x= "
-                         << allMessage[i - diff - 1].points[j].x;
+                // qDebug() << "frame-" << i
+                //          << ", new pos, x = " << allMessage[i].points[j].x
+                //          << ", old pos, x= "
+                //          << allMessage[i - diff - 1].points[j].x;
 
                 double diff_x = 1.0 *
                                 (allMessage[i].points[j].x -
@@ -654,46 +654,7 @@ void Widget::parse_json(const char *filename) {
             pre_node = cur_node;
             pre_frame = cur_frame;
         }
-
-        // int node_from = cur_message["message_from"].toDouble();
-        // int node_recv = cur_message["message_receive"].toDouble();
-        // int mege_size = cur_message["message_size"].toDouble();
-        // int first_frame = cur_message["time"].toDouble() * 100;
-
-        // qDebug() << "first_frame = " << first_frame << ", from = " <<
-        // node_from << ", recv = " << node_recv;
-
-        // for (int j = 0; j < 100; j ++) {
-        //     // 这是一个点。
-        //     double cur_x = node_pos[node_from][1] + (node_pos[node_recv][1] -
-        //     node_pos[node_from][1])*(j) * 0.01; double cur_y =
-        //     node_pos[node_from][2] + (node_pos[node_recv][2] -
-        //     node_pos[node_from][2])*(j) * 0.01;
-
-        //     TimePoint &timePoints_xxxx = allMessage[first_frame+j];
-        //     QVector<Point>& temp_points_xxxx = timePoints_xxxx.points;
-        //     temp_points_xxxx.append( {cur_x, cur_y, -1});
-        // }
     }
-
-    // 下面都是之前测试用的代码。
-    //     for (int i = 0; i < 2000; i++){
-    //         tp.points.append({(2 * i) % 500 + 199, 200, -1});
-    //         tp.points.append({300, (2 * i) % 500 + 199, -1});
-    //         tp.points.append({(2 * i) % 500 + 199, (2 * i) % 500 + 199, -1});
-    // //            tp.points.append({100*i, 200});
-    // //            tp.points.append({200*i, 200});
-    // //            tp.points.append({300*i, 200});
-    //         allMessage.append(tp);
-    //         tp.points.clear();
-    //     }
-
-    // for (int j = 0; j < 100; j++)
-    // for (int i = 0; i < 1000; i++) {
-    //     TimePoint &timePoints = allMessage[i];
-    //     QVector<Point>& temp_points = timePoints.points;
-    //     temp_points.append( {100+j,100+2*j,-1});
-    // }
 }
 
 

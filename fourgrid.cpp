@@ -41,7 +41,6 @@ void FourGrid::setupUI()
     // addContentToFrame(label1, 0, 0);
     w1 = new Widget(0,1);
     addContentToFrame(w1, 0, 0);
-
     w2 = new Widget(1,0);
     addContentToFrame(w2, 1, 0);
 
