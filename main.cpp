@@ -1,5 +1,6 @@
 #include "welcome.h"
 
+
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
@@ -17,9 +18,9 @@ int main(int argc, char *argv[])
             break;
         }
     }
-
+    
     Welcome w;
     w.show();
-
+    
     return a.exec();
 }

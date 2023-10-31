@@ -1,5 +1,0 @@
-/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/four_grid.dir
-/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/four_grid_autogen_timestamp_deps.dir
-/home/eynnzerr/open/JetBrainsWorkSpace/CLion/qttest/cmake-build-debug/CMakeFiles/four_grid_autogen.dir

@@ -671,7 +671,9 @@ void Widget::updatePosition() {
 }
 
 void Widget::setCoefficient(int cur_w, int cur_h) {
+
     cur_width = cur_w - 100; cur_height = cur_h - 100;
+
     x_coefficient = 1.0*cur_width/default_width;
     y_coefficient = 1.0*cur_height/default_height;
     this->clearScene();
@@ -680,11 +682,13 @@ void Widget::setCoefficient(int cur_w, int cur_h) {
 
 void Widget::clearScene() {
     parallelogram_sky.clear();
+
     parallelogram_land.clear();
     parallelogram_underwater.clear();
 }
 
 void Widget::drawScene () {
+
     parallelogram_sky.moveTo(200*x_coefficient, 50*y_coefficient);
     parallelogram_sky.lineTo(1200*x_coefficient, 50*y_coefficient);
     parallelogram_sky.lineTo(1100*x_coefficient, 250*y_coefficient);
@@ -702,6 +706,7 @@ void Widget::drawScene () {
     parallelogram_underwater.lineTo(1100*x_coefficient, 750*y_coefficient);
     parallelogram_underwater.lineTo(100*x_coefficient, 750*y_coefficient);
     parallelogram_underwater.lineTo(200*x_coefficient, 550*y_coefficient);
+
 }
 
 void Widget::DrawLineWithArrow(QPainter &painter, QPen pen, QPoint start,
@@ -799,13 +804,14 @@ void Widget::paintEvent(QPaintEvent *event) {
 
     int cur_second = currentTimestamp / 100;
     if (cur_second > aqua_line_message.size()) {
-
+        return;
     } else {
         lines_aodv = aodv_line_message[cur_second];
         lines_aqua = aqua_line_message[cur_second];
     }
     const TimePoint &timePoints = allMessage[currentTimestamp];
     const QVector<Point>& points = timePoints.points;
+
 
     for (const Line& line : lines_aqua.lines) {
         int first = line.begin_id;

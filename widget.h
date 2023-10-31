@@ -102,6 +102,7 @@ private:
     int default_height = 750;
     int cur_width  = 385 - 100;
     int cur_height = 269 - 100;
+
     double x_coefficient;
     double y_coefficient;
 

@@ -14,7 +14,11 @@
         "initializer_list": "cpp",
         "utility": "cpp",
         "unordered_map": "cpp",
+<<<<<<< HEAD
         "system_error": "cpp",
         "type_traits": "cpp"
+=======
+        "system_error": "cpp"
+>>>>>>> 42b8a89d8ddc3871d1f672483ca36d427f7d5ed7
     }
 }
