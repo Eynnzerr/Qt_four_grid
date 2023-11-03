@@ -28,7 +28,7 @@ add_executable(
         Configuration.h
         NodeConfigItem.cpp
         NodeConfigItem.h
-)
+        StreamConfigItem.cpp StreamConfigItem.h)
 
 target_link_libraries(four_grid
         Qt5::Core

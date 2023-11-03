@@ -10,19 +10,33 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
+#include <QRegExp>
+#include <QRegExpValidator>
+#include <QJsonObject>
 
 class NodeConfigItem: public QWidget {
     Q_OBJECT
 private:
     int index;
+    QComboBox *nodeTypeBox;
     QComboBox *moveMode;
     QLineEdit *moveVelocity;
+    QLineEdit *positionX;
+    QLineEdit *positionY;
+    QLineEdit *positionZ;
 
     void setupUI();
     void initSignalSlots();
 
 public:
     explicit NodeConfigItem(int index);
+    int getNodeType();
+    int getMoveMode();
+    double getVelocity();
+    double getPositionX();
+    double getPositionY();
+    double getPositionZ();
+    QJsonObject toJsonObject();
 };
 
 
