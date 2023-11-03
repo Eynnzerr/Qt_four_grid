@@ -3,7 +3,6 @@
 //
 
 #include "Configuration.h"
-#include <QScrollArea>
 
 Configuration::Configuration(QWidget *parent): QWidget(parent)
 {
@@ -17,59 +16,66 @@ void Configuration::setupUI() {
     auto formLayout = new QFormLayout;
     formLayout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
 
-    // node params
-    auto nodeConfigTitle = new QLabel("Node Params");
+    // node configs
+    auto nodeConfigTitle = new QLabel("节点参数");
     nodeConfigTitle->setStyleSheet("QLabel {font-weight: bold; font-size: 20px}");
     formLayout->addRow(nodeConfigTitle);
 
-    auto uavNodeLabel = new QLabel("1. UAV");
-    uavNodeLabel->setStyleSheet("QLabel {font-weight: 400; font-size: 16px}");
-    uavNodeNumInput = new QLineEdit;
-    uavNodeConfirm = new QPushButton("confirm");
-    uavNodeConfirm->setEnabled(false);
+    btnAddNode = new QPushButton;
+    btnAddNode->setIcon(QIcon(":/res/add.png"));
+    btnAddNode->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
+    btnDeleteNode = new QPushButton;
+    btnDeleteNode->setIcon(QIcon(":/res/subtract.png"));
+    btnDeleteNode->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
     auto hLayout1 = new QHBoxLayout;
-    hLayout1->addWidget(uavNodeNumInput);
-    hLayout1->addWidget(uavNodeConfirm);
-    formLayout->addRow(uavNodeLabel);
-    formLayout->addRow("node num:", hLayout1);
-    uavConfigList = new QListWidget;
-    formLayout->addRow(uavConfigList);
+    hLayout1->addWidget(btnAddNode);
+    hLayout1->addWidget(btnDeleteNode);
+    hLayout1->addStretch();
+    formLayout->addRow(hLayout1);
 
-    auto usvNodeLabel = new QLabel("2. USV");
-    usvNodeLabel->setStyleSheet("QLabel {font-weight: 400; font-size: 16px}");
-    usvNodeNumInput = new QLineEdit;
-    usvNodeConfirm = new QPushButton("confirm");
-    usvNodeConfirm->setEnabled(false);
+    nodeConfigList = new QListWidget;
+    nodeConfigList->setSelectionMode(QAbstractItemView::NoSelection);
+    formLayout->addRow(nodeConfigList);
+//    auto nodeConfigHeader = new QHBoxLayout;
+//    auto nodeNumberHeader = new QLabel("序号");
+//    auto nodeTypeHeader = new QLabel("节点种类");
+//    auto movementHeader = new QLabel("运动方式");
+//    auto positionHeader = new QLabel("初始位置");
+//    nodeConfigHeader->addWidget(nodeNumberHeader);
+//    nodeConfigHeader->addStretch();
+//    nodeConfigHeader->addWidget(nodeTypeHeader);
+//    nodeConfigHeader->addWidget(movementHeader);
+//    nodeConfigHeader->addWidget(positionHeader);
+//    auto itemHeader = new QListWidgetItem(nodeConfigList);
+//    itemHeader->setSizeHint(nodeConfigHeader->sizeHint());
+
+    // channel configs
+    auto channelConfigTitle = new QLabel("信道参数");
+    channelConfigTitle->setStyleSheet("QLabel {font-weight: bold; font-size: 20px}");
+    formLayout->addRow(channelConfigTitle);
+
+    btnAddStream = new QPushButton;
+    btnAddStream->setIcon(QIcon(":/res/add.png"));
+    btnAddStream->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
+    btnDeleteStream = new QPushButton;
+    btnDeleteStream->setIcon(QIcon(":/res/subtract.png"));
+    btnDeleteStream->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
     auto hLayout2 = new QHBoxLayout;
-    hLayout2->addWidget(usvNodeNumInput);
-    hLayout2->addWidget(usvNodeConfirm);
-    formLayout->addRow(usvNodeLabel);
-    formLayout->addRow("node num:", hLayout2);
-    usvConfigList = new QListWidget;
-    formLayout->addRow(usvConfigList);
+    hLayout2->addWidget(btnAddStream);
+    hLayout2->addWidget(btnDeleteStream);
+    hLayout2->addStretch();
+    formLayout->addRow(hLayout2);
 
-    auto auvNodeLabel = new QLabel("3. AUV");
-    auvNodeLabel->setStyleSheet("QLabel {font-weight: 400; font-size: 16px}");
-    auvNodeNumInput = new QLineEdit;
-    auvNodeConfirm = new QPushButton("confirm");
-    auvNodeConfirm->setEnabled(false);
-    auto hLayout3 = new QHBoxLayout;
-    hLayout3->addWidget(auvNodeNumInput);
-    hLayout3->addWidget(auvNodeConfirm);
-    formLayout->addRow(auvNodeLabel);
-    formLayout->addRow("node num:", hLayout3);
-    auvConfigList = new QListWidget;
-    formLayout->addRow(auvConfigList);
+    streamConfigList = new QListWidget;
+    streamConfigList->setSelectionMode(QAbstractItemView::NoSelection);
+    formLayout->addRow(streamConfigList);
 
-    // channel model
-    auto channelModelTitle = new QLabel("Channel Model");
-    channelModelTitle->setStyleSheet("QLabel {font-weight: bold; font-size: 20px}");
-    formLayout->addRow(channelModelTitle);
-    auto channelModelBox = new QComboBox;
-    QStringList modeOptions;
-    modeOptions << "射频无线信道" << "水声通信信道" << "水下光通信信道" << "卫星微波信道";
-    channelModelBox->addItems(modeOptions);
-    formLayout->addRow("channel model:", channelModelBox);
+    underwaterComDistance = new QLineEdit;
+    wifiComDistance = new QLineEdit;
+    opticalComDistance = new QLineEdit;
+    formLayout->addRow("水声通信距离:", underwaterComDistance);
+    formLayout->addRow("wifi通信距离:", wifiComDistance);
+    formLayout->addRow("光通信距离:", opticalComDistance);
 
     // tail buttons
     btnToSimulation = new QPushButton("start");
@@ -86,60 +92,71 @@ void Configuration::setupUI() {
 }
 
 void Configuration::initSignalSlots() {
-    connect(uavNodeNumInput, &QLineEdit::textChanged, this, [=](const QString& value) {
-        QRegularExpression regex("^[0-9]+$");
-        uavNodeConfirm->setEnabled(regex.match(value).hasMatch());
+    connect(btnAddNode, &QPushButton::clicked, this, [=] {
+        auto item = new QListWidgetItem(nodeConfigList);
+        auto itemWidget = new NodeConfigItem(nodeConfigList->count());
+        item->setSizeHint(itemWidget->sizeHint());
+        nodeConfigList->setItemWidget(item, itemWidget);
     });
-    connect(usvNodeNumInput, &QLineEdit::textChanged, this, [=](const QString& value) {
-        QRegularExpression regex("^[0-9]+$");
-        usvNodeConfirm->setEnabled(regex.match(value).hasMatch());
-    });
-    connect(auvNodeNumInput, &QLineEdit::textChanged, this, [=](const QString& value) {
-        QRegularExpression regex("^[0-9]+$");
-        auvNodeConfirm->setEnabled(regex.match(value).hasMatch());
-    });
-    connect(uavNodeConfirm, &QPushButton::clicked, this, [=] {
-        int nodeNum = uavNodeNumInput->text().toInt();
-        if (uavConfigList->count() > 0) {
-            uavConfigList->clear();
-        }
-        for (int i = 0; i < nodeNum; ++i) {
-            auto item = new QListWidgetItem(uavConfigList);
-            auto itemWidget = new NodeConfigItem(i+1);
-            item->setSizeHint(itemWidget->sizeHint());
-            uavConfigList->setItemWidget(item, itemWidget);
+    connect(btnDeleteNode, &QPushButton::clicked, this, [=] {
+        if (nodeConfigList->count() > 0) {
+            QListWidgetItem *item = nodeConfigList->takeItem(nodeConfigList->count() - 1);
+            delete item;
         }
     });
-    connect(usvNodeConfirm, &QPushButton::clicked, this, [=] {
-        int nodeNum = usvNodeNumInput->text().toInt();
-        if (usvConfigList->count() > 0) {
-            usvConfigList->clear();
-        }
-        for (int i = 0; i < nodeNum; ++i) {
-            auto item = new QListWidgetItem(usvConfigList);
-            auto itemWidget = new NodeConfigItem(i+1);
-            item->setSizeHint(itemWidget->sizeHint());
-            usvConfigList->setItemWidget(item, itemWidget);
+
+    connect(btnAddStream, &QPushButton::clicked, this, [=] {
+        auto item = new QListWidgetItem(streamConfigList);
+        auto itemWidget = new StreamConfigItem(streamConfigList->count());
+        item->setSizeHint(itemWidget->sizeHint());
+        streamConfigList->setItemWidget(item, itemWidget);
+    });
+    connect(btnDeleteStream, &QPushButton::clicked, this, [=] {
+        if (streamConfigList->count() > 0) {
+            QListWidgetItem *item = streamConfigList->takeItem(streamConfigList->count() - 1);
+            delete item;
         }
     });
-    connect(auvNodeConfirm, &QPushButton::clicked, this, [=] {
-        int nodeNum = auvNodeNumInput->text().toInt();
-        if (auvConfigList->count() > 0) {
-            auvConfigList->clear();
-        }
-        for (int i = 0; i < nodeNum; ++i) {
-            auto item = new QListWidgetItem(auvConfigList);
-            auto itemWidget = new NodeConfigItem(i+1);
-            item->setSizeHint(itemWidget->sizeHint());
-            auvConfigList->setItemWidget(item, itemWidget);
-        }
-    });
+
     connect(btnGoBack, &QPushButton::clicked, this, [=] {
         auto *next = new Welcome;
         close();
         next->show();
     });
     connect(btnToSimulation, &QPushButton::clicked, this, [=] {
+        // 收集本页面全部写入信息，存入新建json文件中
+        QJsonObject simulationConfig;
+        QJsonArray nodeConfigs, streamConfigs;
+        for (int i = 0; i < nodeConfigList->count(); ++i) {
+            QListWidgetItem *listItem = nodeConfigList->item(i);
+            if (listItem) {
+                auto nodeConfigItem = (NodeConfigItem *) nodeConfigList->itemWidget(listItem);
+                nodeConfigs.append(nodeConfigItem->toJsonObject());
+            }
+        }
+        simulationConfig["node_config"] = nodeConfigs;
+        for (int i = 0; i < streamConfigList->count(); ++i) {
+            QListWidgetItem *listItem = streamConfigList->item(i);
+            if (listItem) {
+                auto streamConfigItem = (StreamConfigItem *) streamConfigList->itemWidget(listItem);
+                streamConfigs.append(streamConfigItem->toJsonObject());
+            }
+        }
+        simulationConfig["stream_config"] = streamConfigs;
+        simulationConfig["submarine_distance"] = underwaterComDistance->text().toDouble();
+        simulationConfig["wifi_distance"] = wifiComDistance->text().toDouble();
+        simulationConfig["optic_distance"] = opticalComDistance->text().toDouble();
+
+        QJsonDocument jsonDoc(simulationConfig);
+        QFile file("data.json");
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(jsonDoc.toJson());
+            file.close();
+            qDebug() << "new config file saved successfully.";
+        } else {
+            qDebug() << "Failed to save new config file.";
+        }
+
         auto *next = new FourGrid;
         close();
         next->show();

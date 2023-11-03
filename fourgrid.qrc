@@ -7,5 +7,7 @@
         <file>res/test.jpg</file>
         <file>res/uav.png</file>
         <file>res/usv.png</file>
+        <file>res/add.png</file>
+        <file>res/subtract.png</file>
     </qresource>
 </RCC>

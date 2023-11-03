@@ -15,27 +15,31 @@
 #include <QScrollArea>
 #include <QListWidget>
 #include <QComboBox>
-#include <QRegularExpression>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "NodeConfigItem.h"
+#include "StreamConfigItem.h"
 #include "welcome.h"
 
 class Configuration: public QWidget {
     Q_OBJECT
 private:
-    QLineEdit *uavNodeNumInput;
-    QPushButton *uavNodeConfirm;
-    QListWidget *uavConfigList;
-
-    QLineEdit *usvNodeNumInput;
-    QPushButton *usvNodeConfirm;
-    QListWidget *usvConfigList;
-
-    QLineEdit *auvNodeNumInput;
-    QPushButton *auvNodeConfirm;
-    QListWidget *auvConfigList;
-
     QPushButton *btnToSimulation;
     QPushButton *btnGoBack;
+
+    QPushButton *btnAddNode;
+    QPushButton *btnDeleteNode;
+    QListWidget *nodeConfigList;
+
+    QPushButton *btnAddStream;
+    QPushButton *btnDeleteStream;
+    QListWidget *streamConfigList;
+
+    QLineEdit *underwaterComDistance;
+    QLineEdit *wifiComDistance;
+    QLineEdit *opticalComDistance;
 
     void setupUI();
     void initSignalSlots();
