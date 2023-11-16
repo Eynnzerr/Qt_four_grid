@@ -9,5 +9,7 @@
         <file>res/usv.png</file>
         <file>res/add.png</file>
         <file>res/subtract.png</file>
+        <file>res/computer.png</file>
+        <file>res/new_usv.png</file>
     </qresource>
 </RCC>

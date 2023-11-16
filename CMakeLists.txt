@@ -26,13 +26,22 @@ add_executable(
         fourgrid.qrc
         Configuration.cpp
         Configuration.h
-        NodeConfigItem.cpp
-        NodeConfigItem.h
-        StreamConfigItem.cpp StreamConfigItem.h)
+        chartWidget.cpp
+        chartWidget.h
+        TopoDisplay.cpp
+        TopoDisplay.h
+        StreamConfiguration.cpp
+        StreamConfiguration.h
+        CompletePage.cpp
+        CompletePage.h
+        TopoWidget.cpp
+        TopoWidget.h
+        )
 
 target_link_libraries(four_grid
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
         Qt5::Charts
+        -lpthread -lm
         )

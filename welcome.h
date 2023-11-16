@@ -23,6 +23,7 @@ private:
     QLabel *subtitle;
     QPushButton *btnNew;
     QPushButton *btnHistory;
+    QPushButton *btnRealSim;
 
     // TODO 抽出一个Widget基类，使用模版模式
     void setupUI();

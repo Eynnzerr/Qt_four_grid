@@ -1,5 +1,5 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef TOPOWIDGETH
+#define TOPOWIDGETH
 
 #include <QWidget>
 #include <QPainter>
@@ -16,7 +16,7 @@
 #include <QPainterPath>
 #include <QTextEdit>
 
-class Widget : public QWidget
+class TopoWidget : public QWidget
 {
     Q_OBJECT
 
@@ -94,11 +94,10 @@ private:
     // node_pos[i] , 分别为： 节点种类， 节点x, 节点y, 节点z, 该节点是否真的存在
     double node_pos[100][5];
     
-    int stream_type_matrix[100][100];
     // 判断是否允许绘制相应的图
     int enable_topo   = 0;
     int enable_packet = 0;
-    int enable_satelite = 0;
+
     // double node_pos;
     // QVector<QVector< QVector<int> >> all_node_pos;
 
@@ -112,12 +111,11 @@ private:
     double y_coefficient;
 
 public:
-    Widget(QWidget *parent = nullptr);
-    Widget(int topo, int packet, QWidget *parent = nullptr);
-    Widget(int topo, int packet, char *configPath, QWidget *parent = nullptr);
+    TopoWidget(QWidget *parent = nullptr);
+    TopoWidget(char *configPath,QWidget *parent = nullptr);
 
 
-    ~Widget();
+    ~TopoWidget();
     void init_widget ();
     void parse_json(const char* filename);
 
@@ -129,5 +127,6 @@ public:
     void clearScene();
     void drawScene ();
     void setCoefficient(int cur_w, int cur_h);
+    int getTotalTime();
 };
-#endif // WIDGET_H
+#endif // TOPOWIDGETH
