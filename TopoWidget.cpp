@@ -397,7 +397,7 @@ void TopoWidget::parse_json(const char *filename) {
     const int aqua_range_usv = CHANNEL_MESAGE["SOUND_LEN"].toInt();
     const int aodv_range_usv = CHANNEL_MESAGE["RADIO_LEN"].toInt();
     const int aodv_range_uav = CHANNEL_MESAGE["RADIO_LEN"].toInt();
-    const int sound_range_auv   = CHANNEL_MESAGE["SOUND_LEN"].toInt();
+    const int sound_range_auv   = CHANNEL_MESAGE["LIGHT_LEN"].toInt();
     
     int aodv_range = 5000;
     int aqua_range = 900;
@@ -766,17 +766,17 @@ void TopoWidget::paintEvent(QPaintEvent *event) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img1);
-                // painter.drawText(x - point.node_width * 0.5, y - point.node_height, QString::number(id));
+                // painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
             } else if (point.node_type == 2) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img2);
-                // painter.drawText(x - point.node_width * 0.5, y - point.node_height, QString::number(id));
+                // painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
             } else if (point.node_type == 3) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img3);
-                // painter.drawText(x - point.node_width * 0.5, y - point.node_height, QString::number(id));
+                // painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
             } else {
                 qDebug() << "points.size() = " << points.size();
                 // painter.drawPixmap(x-point.node_width*0.5,

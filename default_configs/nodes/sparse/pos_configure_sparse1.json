@@ -1,0 +1,246 @@
+{
+    "AUV_POS": [
+        {
+            "node_id": 1,
+            "position_x": 2962.0,
+            "position_y": 7433.0,
+            "position_z": 20.0,
+            "type": 1
+        },
+        {
+            "node_id": 2,
+            "position_x": 6515.0,
+            "position_y": 8964.0,
+            "position_z": 20.0,
+            "type": 1
+        },
+        {
+            "node_id": 3,
+            "position_x": 3653.0,
+            "position_y": 5962.0,
+            "position_z": 20.0,
+            "type": 1
+        }
+    ],
+    "CHANNEL_MESAGE": {
+        "LIGHT_LEN": 10,
+        "RADIO_LEN": 5000,
+        "SOUND_LEN": 800
+    },
+    "DEVICE_MESSAGE": {
+        "AUV_ID": [
+            1,
+            2,
+            3
+        ],
+        "UAV_ID": [
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+        ],
+        "USV_ID": [
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "USV_WITH_AQUA": [
+            4,
+            5,
+            6
+        ],
+        "USV_WITH_LIGHT": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "USV_AUV_FATHER_TO_CHILD" : [
+            [1, 1], 
+            [1, 4],
+            [2, 2],
+            [2, 5],
+            [3, 3],
+            [3, 6]
+        ],
+        "AUV_AUV_DIRECT" : [
+        ], 
+        "UAV_USV_CHILD_TO_FATHER" :[
+            [6,5],
+            [7,4],
+            [8,3],
+            [9,2],
+            [10,3],
+            [11,3],
+            [12,1],
+            [13,2],
+            [14,2],
+            [15,2],
+            [16,5],
+            [17,4],
+            [18,3],
+            [19,2],
+            [20,3],
+            [21,3],
+            [22,1],
+            [23,2],
+            [24,2],
+            [25,6],
+            [26,1],
+            [27,2],
+            [28,2],
+            [29,2],
+            [30,2],
+            [31,6],
+            [32,1],
+            [33,2],
+            [34,2],
+            [35,6],
+            [36,1],
+            [37,2],
+            [38,2],
+            [39,2],
+            [40,2],
+            [41,6],
+            [42,1],
+            [43,2],
+            [44,2],
+            [45,6],
+            [46,1],
+            [47,2],
+            [48,2],
+            [49,2],
+            [50,2],
+            [51,6],
+            [52,1],
+            [53,2],
+            [54,2],
+            [55,6],
+            [56,1],
+            [57,2],
+            [58,2],
+            [59,2],
+            [60,2]
+        ]
+    },
+    "SIM_TIME": 30,
+    "UAV_POS": [
+        {
+            "node_id": 9,
+            "position_x": 1513.0,
+            "position_y": 3003.0,
+            "position_z": 59.0,
+            "type": 2
+        },
+        {
+            "node_id": 10,
+            "position_x": 604.0,
+            "position_y": 2217.0,
+            "position_z": 66.0,
+            "type": 2
+        },
+        {
+            "node_id": 11,
+            "position_x": 2764.0,
+            "position_y": 7771.0,
+            "position_z": 53.0,
+            "type": 2
+        },
+        {
+            "node_id": 12,
+            "position_x": 4312.0,
+            "position_y": 7212.0,
+            "position_z": 66.0,
+            "type": 2
+        },
+        {
+            "node_id": 13,
+            "position_x": 6423.0,
+            "position_y": 6265.0,
+            "position_z": 50.0,
+            "type": 2
+        },
+        {
+            "node_id": 14,
+            "position_x": 7979.0,
+            "position_y": 4348.0,
+            "position_z": 51.0,
+            "type": 2
+        },
+        {
+            "node_id": 15,
+            "position_x": 8248.0,
+            "position_y": 7029.0,
+            "position_z": 55.0,
+            "type": 2
+        },
+        {
+            "node_id": 16,
+            "position_x": 8210.0,
+            "position_y": 6462.0,
+            "position_z": 51.0,
+            "type": 2
+        }
+    ],
+    "USV_POS": [
+        {
+            "node_id": 4,
+            "position_x": 2962.0,
+            "position_y": 7433.0,
+            "position_z": 40.0,
+            "type": 2
+        },
+        {
+            "node_id": 5,
+            "position_x": 6515.0,
+            "position_y": 8964.0,
+            "position_z": 40.0,
+            "type": 2
+        },
+        {
+            "node_id": 6,
+            "position_x": 3653.0,
+            "position_y": 5962.0,
+            "position_z": 40.0,
+            "type": 2
+        },
+        {
+            "node_id": 7,
+            "position_x": 4714.0,
+            "position_y": 7366.0,
+            "position_z": 40.0,
+            "type": 2
+        },
+        {
+            "node_id": 8,
+            "position_x": 6496.0,
+            "position_y": 7710.0,
+            "position_z": 40.0,
+            "type": 2
+        }
+    ],
+    "node_num": {
+        "auv_num": 3,
+        "uav_num": 8,
+        "usv_num": 5
+    },
+    "VEL_T" : [
+        [
+            {"time" : 10, "VEL_X":40, "VEL_Y":1, "VEL_Z":1},
+            {"time" : 50, "VEL_X":40, "VEL_Y":1, "VEL_Z":1},
+            {"time" : 60, "VEL_X":0, "VEL_Y":0, "VEL_Z":0}
+        ],
+        [
+            {"time" : 10, "VEL_X":40, "VEL_Y":1, "VEL_Z":1},
+            {"time" : 50, "VEL_X":40, "VEL_Y":1, "VEL_Z":1},
+            {"time" : 60, "VEL_X":0, "VEL_Y":0, "VEL_Z":0}
+        ]
+    ]
+}

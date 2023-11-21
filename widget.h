@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QTimer>
 #include <QVector>
+#include <QMap>
 #include <QLineEdit>
 #include <QJsonObject>
 
@@ -47,9 +48,19 @@ struct TimeLine{
     QVector<Line> lines;
 };
 
+struct TimeTrace {
+    int delay;
+    int timestamp;
+    QVector<int> trace;
+};
+
+typedef QMap<int, QVector<TimeTrace>> StreamTimeTraces;
+
 private:
     int currentTimestamp = 0;
     char *configPath;
+
+    StreamTimeTraces streamTimeTraces; // 半实物画图所用数据结构
     
     QTimer* timer;
     QPushButton* btn1;
@@ -111,6 +122,10 @@ private:
     double x_coefficient;
     double y_coefficient;
 
+    QMap<QString, int> packetIDtoStreamType;
+    int packet_line_color[4][3]; // 4种数据包线条的颜色
+    int topo_link_color[3][3];
+
 public:
     Widget(QWidget *parent = nullptr);
     Widget(int topo, int packet, QWidget *parent = nullptr);
@@ -125,9 +140,14 @@ public:
     void updatePosition();
     void showPosition();
     void DrawLineWithArrow(QPainter& painter, QPen pen, QPoint start, QPoint end, int with_arrow);
+    void drawLineForStreamAtTime(int stream_type, int frame); // TODO 弃用
+    void addStreamToDisplay(int stream_type);
 
     void clearScene();
     void drawScene ();
     void setCoefficient(int cur_w, int cur_h);
+    int getTotalTime();
+    void resetTimestamp();
+    int getCurrentTime();
 };
 #endif // WIDGET_H

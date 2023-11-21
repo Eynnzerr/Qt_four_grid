@@ -14,8 +14,6 @@ FourGrid::FourGrid(QWidget *parent)
 
 FourGrid::FourGrid(char *tracePath, QWidget *parent) {
     timer = new QTimer(this);
-    currentTime = 0;
-    totalTime = 10000;
     this->tracePath = tracePath;
 
     setupNewUI();
@@ -25,60 +23,6 @@ FourGrid::FourGrid(char *tracePath, QWidget *parent) {
 
 FourGrid::~FourGrid()
 = default;
-
-//void FourGrid::setupUI()
-//{
-//    // set up four grids and sub widgets
-//    auto *fourGrids = new QGridLayout;
-//
-//    for (int row = 0; row < 2; ++row)
-//    {
-//        for (int col = 0; col < 2; ++col)
-//        {
-//            auto *frame = new QFrame;
-//            frame->setFrameStyle(QFrame::Box);
-//            frame->setStyleSheet("background-color:white;");
-//            frame->setFrameShape(QFrame::Panel);
-//            frame->setLineWidth(2);
-//            frames[row][col] = frame;
-//            fourGrids->addWidget(frame, row, col);
-//        }
-//    }
-//
-//    // setup child widget here.
-//    w1 = new Widget(0,1);
-//    addContentToFrame(w1, 0, 0);
-//    w2 = new Widget(1,0);
-//    addContentToFrame(w2, 1, 0);
-//
-//
-//
-//    label2 = new QLabel("test");
-//    addContentToFrame(label2, 0, 1);
-//    // label3 = new QLabel("test");
-//    // addContentToFrame(label3, 1, 0);
-//    label4 = new QLabel("test");
-//    addContentToFrame(label4, 1, 1);
-//
-//    // set up header.
-//    auto *header = new QHBoxLayout;
-//    header->setSpacing(4);
-//    btnStart = new QPushButton("start");
-//    btnStop = new QPushButton("stop");
-//    progressBar = new QProgressBar;
-//    progressBar->setRange(0, totalTime);
-//    header->addWidget(btnStart);
-//    header->addWidget(btnStop);
-//    header->addWidget(progressBar);
-//
-//    auto *vLayout = new QVBoxLayout;
-//    vLayout->setSpacing(8);
-//    vLayout->addLayout(header);
-//    vLayout->addLayout(fourGrids);
-//
-//    setLayout(vLayout);
-//    setMinimumSize(800, 600);
-//}
 
 void FourGrid::setupNewUI() {
     auto *fourGrids = new QGridLayout;
@@ -111,12 +55,38 @@ void FourGrid::setupNewUI() {
     // 安装具体控件
     flowGraph = new Widget(1, 1, tracePath);
     addContentToFrame(leftFrame, flowGraph);
+
     chart = new ChartWidget(tracePath);
     addContentToFrame(rightTopFrame, chart);
 
+    currentTime = 0;
+    totalTime = flowGraph->getTotalTime() * 100;
+
+    // TODO: 读取log_path，这里以后统一把json读取提到本控件中，给子控件按需传数据下去即可。
+    QFile loadFile(tracePath);
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "couldn't open trace file json.";
+        return;
+    }
+
+    QByteArray allData = loadFile.readAll();
+    loadFile.close();
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &jsonError));
+
+    if (jsonError.error != QJsonParseError::NoError) {
+        qDebug() << "json error!" << jsonError.errorString();
+        return;
+    }
+
+    QJsonObject real_rootObj = jsonDoc.object();
+    QJsonObject rootObj = real_rootObj["2d_message"].toObject();
+    QString logFilePath = rootObj.value("log_path").toString();
+
     logOutput = new QPlainTextEdit;
     logOutput->setReadOnly(true);
-    auto logFile = new QFile("./final_sim_file.txt");
+    auto logFile = new QFile(logFilePath);
     if (logFile->open(QIODevice::ReadOnly)) {
         QTextStream in(logFile);
         logOutput->setPlainText(in.readAll());
@@ -159,9 +129,20 @@ void FourGrid::setupNewUI() {
 void FourGrid::initSignalSlots()
 {
     connect(timer, &QTimer::timeout, this, [=] {
-        flowGraph->updatePosition();
+        currentTime ++;
+        if (currentTime >= totalTime) {
+            timer->stop();
+            currentTime = 0;
+            flowGraph->resetTimestamp();
+            btnStart->setText("重启");
+        } else {
+            flowGraph->updatePosition();
+        }
     });
     connect(btnStart, &QPushButton::clicked, this, [=](){
+        if (flowGraph->getCurrentTime() == 0) {
+            btnStart->setText("开始");
+        }
         timer->start(10);
     });
     connect(btnStop, &QPushButton::clicked, this, [=](){
@@ -204,10 +185,4 @@ void FourGrid::onTimeChanged()
         disconnect(timer, SIGNAL(timeout()), this, SLOT(onTimeChanged()));
     }
     progressBar->setValue(currentTime);
-
-    // TODO sub widgets should design their own slots and connect to timeout() of timer.
-    // label1->setText(QString::number(currentTime / 1000));
-    //label2->setText(QString::number(currentTime / 1000));
-    // label3->setText(QString::number(currentTime / 1000));
-    //label4->setText(QString::number(currentTime / 1000));
 }

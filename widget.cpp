@@ -50,6 +50,15 @@ Widget::~Widget() {}
 
 void Widget::init_widget () {
 // 初始化数据
+    packet_line_color[0][0] = 0; packet_line_color[0][1] = 0; packet_line_color[0][2] = 0; // CBR
+    packet_line_color[1][0] = 0; packet_line_color[1][1] = 0; packet_line_color[1][2] = 255; // VOIP
+    packet_line_color[2][0] = 0; packet_line_color[2][1] = 255; packet_line_color[2][2] = 0; // CSMXP
+    packet_line_color[3][0] = 255; packet_line_color[3][1] = 0; packet_line_color[3][2] = 0; // HTTP
+
+    topo_link_color[0][0] = 255; topo_link_color[0][1] = 0; topo_link_color[0][2] = 128; // 水
+    topo_link_color[1][0] = 0; topo_link_color[1][1] = 128; topo_link_color[1][2] = 255; // wifi
+    topo_link_color[2][0] = 128; topo_link_color[2][1] = 255; topo_link_color[2][2] = 0; // 光
+
     // double node_pos[100][5];
     for (int i = 0; i < 100; i++) {
         for (int j = 0; j < 5; j++) {
@@ -118,7 +127,7 @@ void Widget::init_widget () {
 
     // char *filename = "/home/hylester/ns3/ns-allinone-3.38/ns-3.38/2d-plot.json";
     // TODO: 修改
-    char *filename = configPath;
+    const char *filename = configPath;
     this->parse_json(filename);
 
     // Create a timer to refresh the points every 20ms
@@ -416,11 +425,11 @@ void Widget::parse_json(const char *filename) {
     const int aqua_range_usv = CHANNEL_MESAGE["SOUND_LEN"].toInt();
     const int aodv_range_usv = CHANNEL_MESAGE["RADIO_LEN"].toInt();
     const int aodv_range_uav = CHANNEL_MESAGE["RADIO_LEN"].toInt();
-    const int sound_range_auv   = CHANNEL_MESAGE["SOUND_LEN"].toInt();
+	const int light_range_auv   = CHANNEL_MESAGE["LIGHT_LEN"].toInt();
     
     int aodv_range = 5000;
     int aqua_range = 900;
-    int sound_range = sound_range_auv;
+    int light_range = light_range_auv;
     // std::set<int> aqua_node_index_set;
     // std::set<int> aodv_node_index_set;
     qDebug() << "aqua_node_index_set: size = " << aqua_node_index_set.size()
@@ -455,7 +464,7 @@ void Widget::parse_json(const char *filename) {
                         (aa.z - bb.z) * (aa.z - bb.z) -
                         aqua_range * aqua_range <
                     0) {
-                    tl.lines.append({*first - 1, *second - 1, 0, 0, 255});
+                    tl.lines.append({*first - 1, *second - 1, topo_link_color[0][0], topo_link_color[0][1], topo_link_color[0][2] });
                 }
             }
         }
@@ -482,7 +491,7 @@ void Widget::parse_json(const char *filename) {
                         (aa.z - bb.z) * (aa.z - bb.z) -
                         aodv_range * aodv_range <
                     0) {
-                    tl.lines.append({*first - 1, *second - 1, 255, 0, 0});
+                    tl.lines.append({*first - 1, *second - 1, topo_link_color[1][0], topo_link_color[1][1], topo_link_color[1][2]});
                     // qDebug() << "add aodv line ";
                 }
             }
@@ -492,7 +501,6 @@ void Widget::parse_json(const char *filename) {
         for (std::set<int>::iterator first = light_node_index_set.begin();
              first != light_node_index_set.end(); ++first) {
 
-            sound_range = sound_range_auv;
             std::set<int>::iterator second = first;
             second++;
             for (; second != light_node_index_set.end(); ++second) {
@@ -502,9 +510,9 @@ void Widget::parse_json(const char *filename) {
                 if ((aa.x - bb.x) * (aa.x - bb.x) +
                         (aa.y - bb.y) * (aa.y - bb.y) +
                         (aa.z - bb.z) * (aa.z - bb.z) -
-                        sound_range * sound_range <
+                        light_range * light_range <
                     0) {
-                    tl.lines.append({*first - 1, *second - 1, 0, 255, 0});
+                    tl.lines.append({*first - 1, *second - 1, topo_link_color[2][0], topo_link_color[2][1], topo_link_color[2][2]});
                     // qDebug() << "add light line ";
 
                 }
@@ -590,6 +598,14 @@ void Widget::parse_json(const char *filename) {
         =  cur_steam["steam_type"].toInt();
     }
 
+    // 先处理一遍所有数据包
+    QJsonObject packet_type = rootObj["packet_type"].toObject();
+    QStringList packet_id_x = packet_type.keys();
+    for (int i = 0; i < packet_id_x.size(); i++) {
+        QJsonObject cur_message = packet_type[packet_id_x.at(i)].toObject();
+        packetIDtoStreamType.insert (packet_id_x.at(i), cur_message["stream_type"].toInt());
+    }
+
     // 开始北伐 ！！！ 感觉逻辑最难盘的一部分。
     QJsonObject aodvMessage = aodvObj.value("Message").toObject();
 
@@ -597,21 +613,60 @@ void Widget::parse_json(const char *filename) {
     // 直接把后面 7+2位 截除。
     QStringList packet_id = aodvMessage.keys();
 
+    // 遍历每个包及其经过节点和时间戳，收集得到半实物仿真所需数据结构。
+    for (int i = 0; i <= 3; i ++) {
+        streamTimeTraces.insert(i, QVector<TimeTrace>());
+    }
+    for (int i = 0; i < packet_id.size(); i ++) {
+        int packet_line_type = packetIDtoStreamType[packet_id.at(i)];
+        QJsonObject cur_message = aodvMessage[packet_id.at(i)].toObject();
+        QStringList packet_trace = cur_message.keys();
+        TimeTrace timeTrace;
+        timeTrace.delay = packet_trace.last().chopped(7+2).toInt() - packet_trace.first().chopped(7+2).toInt();
+        timeTrace.timestamp = packet_trace.first().chopped(7+2).toInt();
+        for (int j = 0; j < packet_trace.size(); ++j) {
+            int node = cur_message[packet_trace[j]].toInt();
+//            if (timeTrace.trace.isEmpty() || timeTrace.trace.last() != node) {
+//                timeTrace.trace.append(node);
+//            }
+            timeTrace.trace.append(node);
+        }
+        streamTimeTraces[packet_line_type].append(timeTrace);
+    }
+    // 打印streamTimeTraces结构，观测解析是否正确
+    for (int i = 0; i <= 3; i ++) {
+        qDebug() << "流种类： " << i << ", 对应路径序列:";
+        for (const auto& timeTrace : streamTimeTraces[i]) {
+            qDebug() << "timestamp: " << timeTrace.timestamp << "frames; delay: " << timeTrace.delay << "frames; route: " << timeTrace.trace;
+        }
+    }
+
+    // 遍历每个包及其经过节点和时间戳
     for (int i = 0; i < packet_id.size(); i++) {
+        // cur_message: { "16320000000TX": 6, "16326865589RX": 10 }
         QJsonObject cur_message = aodvMessage[packet_id.at(i)].toObject();
 
+        // packet_trace: ["16550000000TX", "16550000001RX", "17510000000TX", "17514649165RX"] 单位纳秒10^-9
         QStringList packet_trace = cur_message.keys();
 
         QString frame = packet_trace.at(0);
-        int pre_node = cur_message[frame].toInt();
+        int pre_node = cur_message[frame].toInt(); // 始发节点id
+        // 帧单位为10^-2秒，再除去末尾英文，得到帧单位下的时间戳
         frame.chop(7 + 2);
         int pre_frame = frame.toInt();
         
         int send_node = pre_node;
         QString end_frame = packet_trace.at(packet_trace.size()-1);
         int recv_node = cur_message[end_frame].toInt();
+        int packet_line_type = 0;
         qDebug() << "send node = " << send_node << ", recv node = " << recv_node;
         qDebug() << "stream_type_matrix[send_node][recv_node] = " << stream_type_matrix[send_node][recv_node];
+        if (packetIDtoStreamType.contains(packet_id.at(i))) {
+            qDebug() << "real type = " << packetIDtoStreamType[packet_id.at(i)];
+            packet_line_type = packetIDtoStreamType[packet_id.at(i)];
+        } else {
+            qDebug() << "packet type not record! error";
+        }
 
         // 如果有问题的话就需要从前往后
         for (int j = 1; j < packet_trace.size(); j++) {
@@ -629,18 +684,13 @@ void Widget::parse_json(const char *filename) {
                 QVector<Point> &temp_points_xxxx = timePoints_xxxx.points;
                 // 画包 // 如何获得包的颜色
                 temp_points_xxxx.append({pre_node, cur_node,
-                 stream_type_matrix[send_node][recv_node],
-                  996, 50, 50});
+                        packet_line_type,                     
+                        996, 50, 50});
             }
             pre_node = cur_node;
             pre_frame = cur_frame;
         }
     }
-
-    qDebug() << "allMessage.size:" << allMessage.size();
-    qDebug() << "aodv_line.size:" << aodv_line_message.size();
-    qDebug() << "aqua_line.size:" << aqua_line_message.size();
-    qDebug() << "sound_line.size:" << sound_line_message.size();
 }
 
 
@@ -712,7 +762,12 @@ void Widget::DrawLineWithArrow(QPainter &painter, QPen pen, QPoint start,
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     qreal arrowSize = 20;
-    // pen.setColor(Qt::blue);
+    if (!with_arrow) { // 包， 画实线
+        pen.setStyle(Qt::DotLine);
+    } else { // 拓扑， 画虚线
+        pen.setStyle(Qt::SolidLine);
+    }
+    pen.setWidth(3);
     painter.setPen(pen);
     painter.setBrush(pen.color());
 
@@ -757,21 +812,103 @@ void Widget::paintEvent(QPaintEvent *event) {
 
     QPen pen2 = QPen(QColor(0, 0, 255), 2, Qt::SolidLine);
 
-    pen.setColor(QColor(255, 0, 0));
+    // 图例
+    pen.setStyle(Qt::DotLine);
+    pen.setColor(QColor(topo_link_color[1][0], topo_link_color[1][1], topo_link_color[1][2]));
     painter.setPen(pen);
     painter.drawLine(QPoint(60, 45), QPoint(90, 45));
-    pen.setColor(QColor(0, 255, 0));
+    pen.setColor(QColor(topo_link_color[2][0], topo_link_color[2][1], topo_link_color[2][2]));
     painter.setPen(pen);
     painter.drawLine(QPoint(60, 65), QPoint(90, 65));
-    pen.setColor(QColor(0, 0, 255));
+    pen.setColor(QColor(topo_link_color[0][0], topo_link_color[0][1], topo_link_color[0][2]));
     painter.setPen(pen);
     painter.drawLine(QPoint(60, 85), QPoint(90, 85));
 
     pen.setColor(QColor(0, 0, 0));
     painter.setPen(pen);
-    painter.drawText(100, 50, "射频");
-    painter.drawText(100,70, "光");
-    painter.drawText(100, 90, "水声");
+    painter.drawText(100, 50, "射频链路");
+    painter.drawText(100,70, "光链路");
+    painter.drawText(100, 90, "水声链路");
+
+    pen.setStyle(Qt::SolidLine);
+    pen.setColor(QColor(packet_line_color[0][0], packet_line_color[0][1], packet_line_color[0][2]));
+    painter.setPen(pen);
+    painter.drawLine(QPoint(200, 25), QPoint(230, 25));
+    pen.setColor(QColor(packet_line_color[1][0], packet_line_color[1][1], packet_line_color[1][2]));
+    painter.setPen(pen);
+    painter.drawLine(QPoint(200, 45), QPoint(230, 45));
+    pen.setColor(QColor(packet_line_color[2][0], packet_line_color[2][1], packet_line_color[2][2]));
+    painter.setPen(pen);
+    painter.drawLine(QPoint(200, 65), QPoint(230, 65));
+    pen.setColor(QColor(packet_line_color[3][0], packet_line_color[3][1], packet_line_color[3][2]));
+    painter.setPen(pen);
+    painter.drawLine(QPoint(200, 85), QPoint(230, 85));
+
+    pen.setColor(QColor(0, 0, 0));
+    painter.setPen(pen);
+    painter.drawText(240, 30, "CBR流");
+    painter.drawText(240,50, "VoIP流");
+    painter.drawText(240, 70, "CSXMP流");
+    painter.drawText(240, 90, "HTTP流");
+
+    if (enable_topo)
+    { // 下面部分是绘制发包的
+        int cur_second = currentTimestamp / 100;
+        if (cur_second >= aqua_line_message.size())
+        {
+            return;
+        }
+        else
+        {
+            lines_aodv = aodv_line_message[cur_second];
+            lines_aqua = aqua_line_message[cur_second];
+            lines_light = sound_line_message[cur_second];
+        }
+        const TimePoint &timePoints = allMessage[currentTimestamp];
+        const QVector<Point> &points = timePoints.points;
+        // pen2.setOpacity(1); // 设置透明度为50%
+        int trans_rate = 178;
+        pen2.setWidth(4);
+        for (const Line &line : lines_aqua.lines)
+        {
+            int first = line.begin_id;
+            int second = line.end_id;
+            int x1 = points[first].x * x_coefficient;
+            int y1 = points[first].y * y_coefficient;
+            int x2 = points[second].x * x_coefficient;
+            int y2 = points[second].y * y_coefficient;
+            pen2.setColor(QColor(line.color_r, line.color_g, line.color_b, trans_rate));
+            // pen2.setColor(QColor(line.color_r, line.color_g, line.color_b, (line.color_r+ line.color_g+line.color_b)/3));
+            DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2), 0);
+        }
+
+        pen2.setWidth(2); // 先画的粗一点， 被覆盖了可以看到
+        for (const Line &line : lines_light.lines)
+        {
+            int first = line.begin_id;
+            int second = line.end_id;
+            int x1 = points[first].x * x_coefficient;
+            int y1 = points[first].y * y_coefficient;
+            int x2 = points[second].x * x_coefficient;
+            int y2 = points[second].y * y_coefficient;
+            pen2.setColor(QColor(line.color_r, line.color_g, line.color_b, trans_rate));
+            // pen2.setColor(QColor(line.color_r, line.color_g, line.color_b, (line.color_r+ line.color_g+line.color_b)/3));
+            DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2), 0);
+        }
+        pen2.setWidth(2);
+        for (const Line &line : lines_aodv.lines)
+        {
+            int first = line.begin_id;
+            int second = line.end_id;
+            int x1 = points[first].x * x_coefficient;
+            int y1 = points[first].y * y_coefficient;
+            int x2 = points[second].x * x_coefficient;
+            int y2 = points[second].y * y_coefficient;
+            pen2.setColor(QColor(line.color_r, line.color_g, line.color_b, trans_rate));
+            // pen2.setColor(QColor(line.color_r, line.color_g, line.color_b, (line.color_r+ line.color_g+line.color_b)/3));
+            DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2), 0);
+        }
+    }
 
     if (!allMessage.empty()) {
         const TimePoint &timePoints = allMessage[currentTimestamp];
@@ -796,6 +933,7 @@ void Widget::paintEvent(QPaintEvent *event) {
                     point.node_width, point.node_height, pix_img3);
                 // painter.drawText(x - point.node_width * 0.5, y, QString::number(id));
             } else if (point.node_type == 996) {
+                // 画包路径
                 if (!enable_packet) continue;
                 int first = (int)point.x;
                 int second = (int)point.y;
@@ -803,15 +941,16 @@ void Widget::paintEvent(QPaintEvent *event) {
                     continue;
                 }
                 int colorType = (int)point.z;
-                if (colorType == 0) {
-                    pen2.setColor(QColor(128, 128, 128));
-                }
-                else if (colorType == 1) {
-                    pen2.setColor(QColor(0, 0, 255));
-                } else if (colorType == 2) {
-                    pen2.setColor(QColor(0, 255, 0));
-                } else if (colorType == 3) {
-                    pen2.setColor(QColor(255, 0, 0));
+                if (colorType != 0)
+                    pen2.setColor(QColor(packet_line_color[colorType][0],
+                                         packet_line_color[colorType][1], packet_line_color[colorType][2]
+                                         // ,255
+                                         // (packet_line_color[colorType][0]+packet_line_color[colorType][1]+packet_line_color[colorType][2])/2*3
+                                         ));
+                else
+                {
+                    pen2.setColor(QColor(packet_line_color[colorType][0],
+                                         packet_line_color[colorType][1], packet_line_color[colorType][2]));
                 }
                 // 这里能运行也是巧合
                 int x1 = points[first - 1].x *x_coefficient;
@@ -823,6 +962,24 @@ void Widget::paintEvent(QPaintEvent *event) {
                 DrawLineWithArrow(painter, pen2, QPoint(x1, y1),
                                   QPoint(x2, y2), 1);
                 
+            } else if (point.node_type == 997) {
+                int first = (int)point.x;
+                int second = (int)point.y;
+                if (first == second) {
+                    continue;
+                }
+                int colorType = (int)point.z;
+                pen2.setColor(QColor(packet_line_color[colorType][0],
+                                     packet_line_color[colorType][1], packet_line_color[colorType][2]
+                ));
+                int x1 = points[first - 1].x *x_coefficient;
+                int y1 = points[first - 1].y *y_coefficient;
+                int x2 = points[second - 1].x *x_coefficient;
+                int y2 = points[second - 1].y *y_coefficient;
+
+                DrawLineWithArrow(painter, pen2, QPoint(x1, y1),
+                                  QPoint(x2, y2), 1);
+                qDebug() << "draw 997 line!";
             } else {
                 qDebug() << "points.size() = " << points.size();
                 // painter.drawPixmap(x-point.node_width*0.5,
@@ -832,54 +989,66 @@ void Widget::paintEvent(QPaintEvent *event) {
             // id ++;
         }
     }
+}
 
-    if (!enable_topo) return;
-    // 下面部分是绘制拓扑的
-    int cur_second = currentTimestamp / 100;
-    qDebug() << "cur_second:" << cur_second;
+int Widget::getTotalTime() {
+    return aqua_line_message.size();
+}
 
-    if (cur_second >= aqua_line_message.size()) {
-        return;
-    } else {
-        lines_aodv = aodv_line_message.at(cur_second);
-        lines_aqua = aqua_line_message.at(cur_second);
-        lines_light = sound_line_message.at(cur_second);
-    }
-    const TimePoint &timePoints = allMessage.at(cur_second);
-    const QVector<Point>& points = timePoints.points;
+void Widget::resetTimestamp() {
+    currentTimestamp = 0;
+}
 
-    pen2.setWidth(4);
-    for (const Line& line : lines_aqua.lines) {
-        int first = line.begin_id;
-        int second = line.end_id;
-        int x1 = points[first].x*x_coefficient;
-        int y1 = points[first].y*y_coefficient;
-        int x2 = points[second].x*x_coefficient;
-        int y2 = points[second].y*y_coefficient;
-        pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
-        DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2), 0);
-    }
+int Widget::getCurrentTime() {
+    return currentTimestamp;
+}
 
-    pen2.setWidth(2);// 先画的粗一点， 被覆盖了可以看到
-    for (const Line& line : lines_light.lines) {
-        int first = line.begin_id;
-        int second = line.end_id;
-        int x1 = points[first].x*x_coefficient;
-        int y1 = points[first].y*y_coefficient;
-        int x2 = points[second].x*x_coefficient;
-        int y2 = points[second].y*y_coefficient;
-        pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
-        DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2), 0);
-    }
-    pen2.setWidth(1);
-    for (const Line& line : lines_aodv.lines) {
-        int first = line.begin_id;
-        int second = line.end_id;
-        int x1 = points[first].x*x_coefficient;
-        int y1 = points[first].y*y_coefficient;
-        int x2 = points[second].x*x_coefficient;
-        int y2 = points[second].y*y_coefficient;
-        pen2.setColor(QColor(line.color_r, line.color_g, line.color_b));
-        DrawLineWithArrow(painter, pen2, QPoint(x1, y1), QPoint(x2, y2), 0);
+void Widget::drawLineForStreamAtTime(int stream_type, int frame) {
+    for (auto timeTrace : streamTimeTraces[stream_type]) {
+        if (timeTrace.timestamp >= frame) {
+            // 找到了当前时间点匹配的路径
+            qDebug() << "receive real stream of type " << stream_type << " at frame " << frame << "! delay: " << timeTrace.delay << " frame.";
+            QPainter painter(this);
+            QPen pen = QPen(QColor(packet_line_color[stream_type][0],packet_line_color[stream_type][1], packet_line_color[stream_type][2]), 2, Qt::SolidLine);
+
+            const TimePoint &timePoints = allMessage[currentTimestamp];
+            const QVector<Point> &points = timePoints.points;
+            for (int i = 0; i < timeTrace.trace.size() - 1; ++i) {
+                int first = timeTrace.trace[i];
+                int second = timeTrace.trace[i+1];
+                int x1 = points[first - 1].x * x_coefficient;
+                int y1 = points[first - 1].y * y_coefficient;
+                int x2 = points[second - 1].x * x_coefficient;
+                int y2 = points[second - 1].y * y_coefficient;
+                DrawLineWithArrow(painter, pen, QPoint(x1, y1),
+                                  QPoint(x2, y2), 1);
+            }
+        }
     }
 }
+
+void Widget::addStreamToDisplay(int stream_type) {
+    for (auto timeTrace : streamTimeTraces[stream_type]) {
+        if (timeTrace.timestamp >= currentTimestamp) {
+            // 找到了当前时间点匹配的路径
+            qDebug() << "receive real stream of type " << stream_type << " at frame " << currentTimestamp << "! delay: " << timeTrace.delay << " frame.";
+            for (int i = 0; i < timeTrace.trace.size() - 1; ++i) {
+                // 逐段设置显示
+                int pre_node = timeTrace.trace[i];
+                int cur_node = timeTrace.trace[i+1];
+                for (int temp_frame = currentTimestamp; temp_frame <= currentTimestamp + 50;
+                     temp_frame++) {
+                    TimePoint &timePoints_xxxx = allMessage[temp_frame];
+                    QVector<Point> &temp_points_xxxx = timePoints_xxxx.points;
+                    temp_points_xxxx.append({static_cast<double>(pre_node), static_cast<double>(cur_node),
+                                             static_cast<double>(stream_type),
+                                             997, 50, 50});
+
+                }
+            }
+            break;
+        }
+    }
+}
+
+

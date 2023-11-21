@@ -107,6 +107,16 @@ void Welcome::initSignalSlots() {
             next->show();
         }
     });
+    connect(btnRealSim, &QPushButton::clicked, [=] {
+        QString dlgTitle="选择已有配置文件"; //对话框标题
+        QString filter="(*.json)"; //文件过滤器
+        QString fileName = QFileDialog::getOpenFileName(this,dlgTitle,"/",filter);
+        if (fileName != nullptr) {
+            auto *next = new RealSimPage(fileName.toLatin1().data());
+            close();
+            next->show();
+        }
+    });
 }
 
 Welcome::~Welcome() = default;

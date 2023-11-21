@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include "fourgrid.h"
 #include "Configuration.h"
+#include "RealSimPage.h"
 
 class Welcome: public QWidget
 {

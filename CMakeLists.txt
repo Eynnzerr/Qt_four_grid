@@ -8,6 +8,8 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_PREFIX_PATH "/home/eynnzerr/open/Qt/5.15.2/gcc_64")
 
+include_directories(./websocketpp)
+
 find_package(Qt5 COMPONENTS
         Core
         Gui
@@ -36,7 +38,7 @@ add_executable(
         CompletePage.h
         TopoWidget.cpp
         TopoWidget.h
-        )
+        RealSimPage.cpp RealSimPage.h)
 
 target_link_libraries(four_grid
         Qt5::Core

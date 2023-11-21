@@ -35,7 +35,7 @@ void StreamConfiguration::setupUI() {
     headLayout->addWidget(label);
     headLayout->addWidget(boxStreamConfig);
     headLayout->addStretch();
-    headLayout->addWidget(btnGoBack);
+    // headLayout->addWidget(btnGoBack);
     headLayout->addWidget(btnToSimulation);
 
     auto divider = new QFrame(this);
@@ -92,7 +92,7 @@ void StreamConfiguration::initSignalSlots() {
                 currentConfigFile->close();
             }
         } else if (index == 2) {
-            currentConfigFile = new QFile("../default_configs/stream/stream_flow_configure_test.json");
+            currentConfigFile = new QFile("../default_configs/stream/stream_flow_dense.json");
             if (currentConfigFile->open(QIODevice::ReadOnly)) {
                 QTextStream in(currentConfigFile);
                 filePreview->setPlainText(in.readAll());

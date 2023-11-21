@@ -47,6 +47,7 @@ void CompletePage::initSignalSlots() {
     });
     connect(btnStart, &QPushButton::clicked, this, [=] {
         title->setText("仿真进行中……");
+        btnStart->setEnabled(false);
         setupPipe();
     });
 }
@@ -90,8 +91,13 @@ void CompletePage::setupPipe() {
                     scriptOutput->appendPlainText(QString::fromStdString(line));
                     repaint();
                     if (line.rfind("save to ", 0) == 0) {
-                        // tracePath = line.substr(8).data();
-                        tracePath = "./A-FINISH-2d-plot.json";
+                        std::string substring = line.substr(8);
+                        const char *path = substring.c_str(); // temp object, must be copied.
+                        qDebug() << "path:" << path << "   length:" << strlen(path);
+                        tracePath = (char *) malloc(100);
+                        strcpy(tracePath, path);
+                        qDebug() << "tracePath is:" << tracePath;
+                        // tracePath = "./A-FINISH-2d-plot.json";
                     }
                     line.clear();
                 } else {
@@ -106,21 +112,6 @@ void CompletePage::setupPipe() {
 
     title->setText("仿真完成。");
     btnFinish->setEnabled(true);
-    btnStart->setEnabled(false);
-    // tracePath = "./aaa--finish-loadfile.json";
-
-    // 从管道读取数据
-//    char buffer[100];
-//    memset(buffer, 0, sizeof buffer);
-//    ssize_t bytesRead = read(fifoFd, buffer, sizeof(buffer) - 1); // 阻塞读
-//
-//    if (bytesRead > 0) {
-//        std::cout << "Received message: " << buffer << std::endl;
-//        tracePath = new char[bytesRead + 1];
-//        strcpy(tracePath, buffer);
-//        title->setText("仿真完成。");
-//        btnFinish->setEnabled(true);
-//    }
 
     // 关闭文件描述符
     ::close(fifoFd);

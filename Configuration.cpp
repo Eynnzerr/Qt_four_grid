@@ -171,7 +171,7 @@ void Configuration::initSignalSlots() {
                 currentConfigFile->close();
             }
         } else if (index == 2) {
-            currentConfigFile = new QFile("../default_configs/nodes/pos_configure_dense_test.json");
+            currentConfigFile = new QFile("../default_configs/nodes/dense/pos_configure_dense2.json");
             if (currentConfigFile->open(QIODevice::ReadOnly)) {
                 QTextStream in(currentConfigFile);
                 filePreview->setPlainText(in.readAll());
@@ -187,7 +187,6 @@ void Configuration::initSignalSlots() {
         auto timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
         std::ostringstream oss;
         oss << timestamp << "_" << boxNodeNum->currentIndex();
-        // QString fileName = simulationName->text().isEmpty() ? QString::fromStdString(oss.str()) : simulationName->text();
         fileName = QString::fromStdString(oss.str());
         auto configPath = "../history_configs/nodes/" + fileName + ".json";
 
@@ -199,13 +198,14 @@ void Configuration::initSignalSlots() {
                 configFile->close();
             }
         }
-        // TODO: 调用脚本生成拓扑图
+        // 调用脚本生成拓扑图
         filePreview->setPlainText("正在生成拓扑图……");
         filePreview->setReadOnly(true);
         repaint();
+        qDebug() << "config path:" << configPath;
         auto command = "./ns3.38-a-finish_get_topo-debug --nodeConfigPath=" + configPath;
         system(command.toLatin1().data());
-        auto *next = new TopoDisplay(&fileName, "./A-FINISH-2d-plot.json"); // TODO 拓扑绘图文件名约定死
+        auto *next = new TopoDisplay(&fileName, "./A-FINISH-2d-plot.json"); // 拓扑绘图文件名约定死
         close();
         next->show();
     });
