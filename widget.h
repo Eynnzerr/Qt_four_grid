@@ -16,6 +16,7 @@
 #include <QLineEdit>
 #include <QPainterPath>
 #include <QTextEdit>
+#include <QJsonArray>
 
 class Widget : public QWidget
 {
@@ -52,6 +53,13 @@ struct TimeTrace {
     int delay;
     int timestamp;
     QVector<int> trace;
+
+    QJsonObject toJsonExcludeTrace() const {
+        QJsonObject obj;
+        obj["delay"] = delay;
+        obj["timestamp"] = timestamp;
+        return obj;
+    }
 };
 
 typedef QMap<int, QVector<TimeTrace>> StreamTimeTraces;
@@ -149,5 +157,6 @@ public:
     int getTotalTime();
     void resetTimestamp();
     int getCurrentTime();
+    std::string getSerializedStreamTimeTraces();
 };
 #endif // WIDGET_H

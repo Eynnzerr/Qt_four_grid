@@ -1051,4 +1051,17 @@ void Widget::addStreamToDisplay(int stream_type) {
     }
 }
 
+std::string Widget::getSerializedStreamTimeTraces() {
+    QJsonObject mainObj;
+    for (auto it = streamTimeTraces.begin(); it != streamTimeTraces.end(); ++it) {
+        QJsonArray timeTraceArray;
+        for (const TimeTrace &timeTrace : it.value()) {
+            timeTraceArray.append(timeTrace.toJsonExcludeTrace());
+        }
+        mainObj[QString::number(it.key())] = timeTraceArray;
+    }
+    QJsonDocument doc(mainObj);
+    return doc.toJson().toStdString();
+}
+
 

@@ -60,13 +60,13 @@ void RealSimPage::setupNewUI() {
     auto testButton = new QPushButton("发送流");
     connect(testButton, &QPushButton::clicked, this, [=] {
         // TODO: 没想明白，为什么时间要由外界决定？应该由空间自身的currenttimestamp决定才合理！
-       // flowGraph->drawLineForStreamAtTime(0, flowGraph->getCurrentTime());
        flowGraph->addStreamToDisplay(0);
     });
     addContentToFrame(rightTopFrame, testButton);
 
     logOutput = new QPlainTextEdit;
     logOutput->setReadOnly(true);
+    logOutput->setPlainText(QString::fromStdString(flowGraph->getSerializedStreamTimeTraces()));
     rightBottomFrame->setFixedSize(400, 300);
     addContentToFrame(rightBottomFrame, logOutput);
 
