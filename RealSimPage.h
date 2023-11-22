@@ -11,10 +11,18 @@
 #include <QPlainTextEdit>
 #include <QGridLayout>
 #include "widget.h"
+#include <websocketpp/config/asio_no_tls_client.hpp>
+#include <websocketpp/client.hpp>
+#include <functional>
+
+typedef websocketpp::client<websocketpp::config::asio_client> client;
+typedef client::message_ptr message_ptr;
 
 class RealSimPage: public QWidget {
     Q_OBJECT
 private:
+    client websocketClient;
+
     char *tracePath;
     QTimer *timer;
     int currentTime;
@@ -34,12 +42,18 @@ private:
 
     void setupNewUI();
     void initSignalSlots();
+    void setupWebsocketClient();
     static void addContentToFrame(QFrame *frame, QWidget *widget);
     void resizeEvent(QResizeEvent *event) override;
 
 public:
     explicit RealSimPage(char *tracePath, QWidget *parent = nullptr);
     ~RealSimPage() override;
+
+    // websocket callbacks
+    void on_message(client* c, websocketpp::connection_hdl hdl, message_ptr msg);
+    void on_open(client* c, websocketpp::connection_hdl hdl);
+    void on_close(client* c, websocketpp::connection_hdl hdl);
 };
 
 
