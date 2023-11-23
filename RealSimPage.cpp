@@ -106,13 +106,31 @@ void RealSimPage::initSignalSlots() {
             currentTime = 0;
             flowGraph->resetTimestamp();
             btnStart->setText("重启");
+            btnStart->setEnabled(false);
+
+            // CP: 仿真结束，向半实物进程发送停止消息
+            QJsonObject stopMsg;
+            QJsonObject data;
+            data["msg"] = "simulation stopped.";
+            stopMsg["code"] = 3;
+            stopMsg["data"] = data;
+            QJsonDocument doc(stopMsg);
+            websocketClient.send(connection->get_handle(), doc.toJson().toStdString(), websocketpp::frame::opcode::text);
         } else {
             flowGraph->updatePosition();
         }
+        progressBar->setValue(currentTime);
     });
     connect(btnStart, &QPushButton::clicked, this, [=](){
         if (flowGraph->getCurrentTime() == 0) {
             btnStart->setText("开始");
+            if (websocketClient.stopped()) {
+                // 重新发起连接
+                std::thread websocketThread([=](){
+                    setupWebsocketClient();
+                });
+                websocketThread.detach();
+            }
         }
         timer->start(10);
     });
@@ -149,14 +167,17 @@ void RealSimPage::setupWebsocketClient() {
 
         // 创建一个连接
         websocketpp::lib::error_code ec;
-        client::connection_ptr con = websocketClient.get_connection(uri, ec);
+        connection = websocketClient.get_connection(uri, ec);
         if (ec) {
             std::cout << "无法创建连接，原因: " << ec.message() << std::endl;
+            QTimer::singleShot(0, this, [=]() {
+                logOutput->appendPlainText(QString::fromStdString("错误：与半实物进程连接建立失败。原因：" + ec.message()));
+            });
             return;
         }
 
         // 连接服务器
-        websocketClient.connect(con);
+        websocketClient.connect(connection);
 
         // 开始Asio的IO循环
         websocketClient.run();
@@ -168,11 +189,30 @@ void RealSimPage::setupWebsocketClient() {
 }
 
 void RealSimPage::on_message(client *c, websocketpp::connection_hdl hdl, message_ptr msg) {
-    std::cout << "收到来自服务端消息: " << msg->get_payload() << std::endl;
-    // 使用QTimer将UI操作push到主线程消息队列
-    QTimer::singleShot(0, this, [=]() {
-        logOutput->appendPlainText(QString::fromStdString(msg->get_payload()));
-    });
+    std::cout << "收到来自半实物进程消息: " << msg->get_payload() << std::endl;
+    // 解析Json，读取数据
+    QJsonParseError jsonError{};
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(QByteArray::fromStdString(msg->get_payload()), &jsonError));
+    if (jsonError.error != QJsonParseError::NoError) {
+        qDebug() << "json error!" << jsonError.errorString();
+        return;
+    }
+    QJsonObject rootObj = jsonDoc.object();
+    int code = rootObj["code"].toInt();
+    QJsonObject data = rootObj["data"].toObject();
+    if (code == 1) {
+        // 收到转发流消息，显示在图上
+        int stream_type = data["stream_type"].toInt();
+        flowGraph->addStreamToDisplay(stream_type);
+
+        QTimer::singleShot(0, this, [=]() {
+            std::ostringstream oss;
+            oss << "第" << flowGraph->getCurrentTimeBySec() << "秒: 转发" << "流类型:" << stream_type;
+            logOutput->appendPlainText(QString::fromStdString(oss.str()));
+        });
+    } else {
+
+    }
 }
 
 void RealSimPage::on_open(client *c, websocketpp::connection_hdl hdl) {

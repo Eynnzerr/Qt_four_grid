@@ -52,8 +52,8 @@ void Widget::init_widget () {
 // 初始化数据
     packet_line_color[0][0] = 0; packet_line_color[0][1] = 0; packet_line_color[0][2] = 0; // CBR
     packet_line_color[1][0] = 0; packet_line_color[1][1] = 0; packet_line_color[1][2] = 255; // VOIP
-    packet_line_color[2][0] = 0; packet_line_color[2][1] = 255; packet_line_color[2][2] = 0; // CSMXP
-    packet_line_color[3][0] = 255; packet_line_color[3][1] = 0; packet_line_color[3][2] = 0; // HTTP
+    packet_line_color[2][0] = 0; packet_line_color[2][1] = 255; packet_line_color[2][2] = 0; // HTTP
+    packet_line_color[3][0] = 255; packet_line_color[3][1] = 0; packet_line_color[3][2] = 0; // CSXMP
 
     topo_link_color[0][0] = 255; topo_link_color[0][1] = 0; topo_link_color[0][2] = 128; // 水
     topo_link_color[1][0] = 0; topo_link_color[1][1] = 128; topo_link_color[1][2] = 255; // wifi
@@ -613,7 +613,7 @@ void Widget::parse_json(const char *filename) {
     // 直接把后面 7+2位 截除。
     QStringList packet_id = aodvMessage.keys();
 
-    // 遍历每个包及其经过节点和时间戳，收集得到半实物仿真所需数据结构。
+    // CP: 遍历每个包及其经过节点和时间戳，收集得到半实物仿真所需数据结构。
     for (int i = 0; i <= 3; i ++) {
         streamTimeTraces.insert(i, QVector<TimeTrace>());
     }
@@ -623,18 +623,19 @@ void Widget::parse_json(const char *filename) {
         QStringList packet_trace = cur_message.keys();
         TimeTrace timeTrace;
         timeTrace.delay = packet_trace.last().chopped(7+2).toInt() - packet_trace.first().chopped(7+2).toInt();
+        if (timeTrace.delay <= 0) {
+            // 异常数据或发送未成功数据，剔除
+            continue;
+        }
         timeTrace.timestamp = packet_trace.first().chopped(7+2).toInt();
         for (int j = 0; j < packet_trace.size(); ++j) {
             int node = cur_message[packet_trace[j]].toInt();
-//            if (timeTrace.trace.isEmpty() || timeTrace.trace.last() != node) {
-//                timeTrace.trace.append(node);
-//            }
             timeTrace.trace.append(node);
         }
         streamTimeTraces[packet_line_type].append(timeTrace);
     }
-    // 打印streamTimeTraces结构，观测解析是否正确
     for (int i = 0; i <= 3; i ++) {
+        std::sort(streamTimeTraces[i].begin(), streamTimeTraces[i].end(), compareByTime);
         qDebug() << "流种类： " << i << ", 对应路径序列:";
         for (const auto& timeTrace : streamTimeTraces[i]) {
             qDebug() << "timestamp: " << timeTrace.timestamp << "frames; delay: " << timeTrace.delay << "frames; route: " << timeTrace.trace;
@@ -848,8 +849,8 @@ void Widget::paintEvent(QPaintEvent *event) {
     painter.setPen(pen);
     painter.drawText(240, 30, "CBR流");
     painter.drawText(240,50, "VoIP流");
-    painter.drawText(240, 70, "CSXMP流");
-    painter.drawText(240, 90, "HTTP流");
+    painter.drawText(240, 70, "HTTP流");
+    painter.drawText(240, 90, "CSXMP流");
 
     if (enable_topo)
     { // 下面部分是绘制发包的
@@ -1000,7 +1001,7 @@ void Widget::resetTimestamp() {
 }
 
 int Widget::getCurrentTime() {
-    return currentTimestamp;
+    return currentTimestamp; // 单位 10ms
 }
 
 void Widget::drawLineForStreamAtTime(int stream_type, int frame) {
@@ -1030,7 +1031,7 @@ void Widget::drawLineForStreamAtTime(int stream_type, int frame) {
 void Widget::addStreamToDisplay(int stream_type) {
     for (auto timeTrace : streamTimeTraces[stream_type]) {
         if (timeTrace.timestamp >= currentTimestamp) {
-            // 找到了当前时间点匹配的路径
+            // 找到了当前时间点匹配的路径。这里已经排序好，故第一个找到大于等于的就是最近匹配的
             qDebug() << "receive real stream of type " << stream_type << " at frame " << currentTimestamp << "! delay: " << timeTrace.delay << " frame.";
             for (int i = 0; i < timeTrace.trace.size() - 1; ++i) {
                 // 逐段设置显示
@@ -1053,15 +1054,27 @@ void Widget::addStreamToDisplay(int stream_type) {
 
 std::string Widget::getSerializedStreamTimeTraces() {
     QJsonObject mainObj;
+    QJsonObject timeObj;
     for (auto it = streamTimeTraces.begin(); it != streamTimeTraces.end(); ++it) {
         QJsonArray timeTraceArray;
         for (const TimeTrace &timeTrace : it.value()) {
             timeTraceArray.append(timeTrace.toJsonExcludeTrace());
         }
-        mainObj[QString::number(it.key())] = timeTraceArray;
+        // mainObj[QString::number(it.key())] = timeTraceArray;
+        timeObj[QString::number(it.key())] = timeTraceArray;
     }
+    mainObj["code"] = 0;
+    mainObj["data"] = timeObj;
     QJsonDocument doc(mainObj);
     return doc.toJson().toStdString();
+}
+
+bool Widget::compareByTime(Widget::TimeTrace t1, Widget::TimeTrace t2) {
+    return t1.timestamp < t2.timestamp;
+}
+
+double Widget::getCurrentTimeBySec() {
+    return getCurrentTime() / 100.0;
 }
 
 

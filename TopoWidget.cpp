@@ -766,17 +766,17 @@ void TopoWidget::paintEvent(QPaintEvent *event) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img1);
-                // painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
+                painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
             } else if (point.node_type == 2) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img2);
-                // painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
+                painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
             } else if (point.node_type == 3) {
                 painter.drawPixmap(
                     x - point.node_width * 0.5, y - point.node_height * 0.5,
                     point.node_width, point.node_height, pix_img3);
-                // painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
+                painter.drawText(x - point.node_width * 0.5, y - point.node_height * 0.5, QString::number(id));
             } else {
                 qDebug() << "points.size() = " << points.size();
                 // painter.drawPixmap(x-point.node_width*0.5,

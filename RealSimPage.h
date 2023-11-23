@@ -14,6 +14,9 @@
 #include <websocketpp/config/asio_no_tls_client.hpp>
 #include <websocketpp/client.hpp>
 #include <functional>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 
 typedef websocketpp::client<websocketpp::config::asio_client> client;
 typedef client::message_ptr message_ptr;
@@ -22,6 +25,7 @@ class RealSimPage: public QWidget {
     Q_OBJECT
 private:
     client websocketClient;
+    client::connection_ptr connection;
 
     char *tracePath;
     QTimer *timer;

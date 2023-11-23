@@ -157,6 +157,9 @@ public:
     int getTotalTime();
     void resetTimestamp();
     int getCurrentTime();
+    double getCurrentTimeBySec();
     std::string getSerializedStreamTimeTraces();
+
+    static bool compareByTime(TimeTrace t1, TimeTrace t2);
 };
 #endif // WIDGET_H
