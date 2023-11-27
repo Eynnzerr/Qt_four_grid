@@ -21,6 +21,7 @@ class StreamConfiguration: public QWidget {
 private:
     QString *simulationName = nullptr;
     QFile *currentConfigFile = nullptr;
+    bool isRealSim = false;
 
     QComboBox *boxStreamConfig;
     QPlainTextEdit *filePreview;
@@ -34,7 +35,7 @@ private:
 
 public:
     explicit StreamConfiguration(QWidget *parent = nullptr);
-    explicit StreamConfiguration(QString *simulationName, QWidget *parent = nullptr);
+    explicit StreamConfiguration(QString *simulationName, bool isRealSim = false, QWidget *parent = nullptr);
 };
 
 

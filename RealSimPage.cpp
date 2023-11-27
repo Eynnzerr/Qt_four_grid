@@ -66,7 +66,6 @@ void RealSimPage::setupNewUI() {
 
     logOutput = new QPlainTextEdit;
     logOutput->setReadOnly(true);
-    logOutput->setPlainText(QString::fromStdString(flowGraph->getSerializedStreamTimeTraces()));
     rightBottomFrame->setFixedSize(400, 300);
     addContentToFrame(rightBottomFrame, logOutput);
 
@@ -124,13 +123,22 @@ void RealSimPage::initSignalSlots() {
     connect(btnStart, &QPushButton::clicked, this, [=](){
         if (flowGraph->getCurrentTime() == 0) {
             btnStart->setText("开始");
-            if (websocketClient.stopped()) {
-                // 重新发起连接
-                std::thread websocketThread([=](){
-                    setupWebsocketClient();
-                });
-                websocketThread.detach();
-            }
+            // 发送正式开始消息
+            QJsonObject startMsg;
+            QJsonObject data;
+            data["msg"] = "simulation started.";
+            startMsg["code"] = 4;
+            startMsg["data"] = data;
+            QJsonDocument doc(startMsg);
+            websocketClient.send(connection->get_handle(), doc.toJson().toStdString(), websocketpp::frame::opcode::text);
+
+//            if (websocketClient.stopped()) {
+//                // 重新发起连接
+//                std::thread websocketThread([=](){
+//                    setupWebsocketClient();
+//                });
+//                websocketThread.detach();
+//            }
         }
         timer->start(10);
     });
@@ -151,7 +159,7 @@ void RealSimPage::resizeEvent(QResizeEvent *event) {
 }
 
 void RealSimPage::setupWebsocketClient() {
-    std::string uri = "ws://localhost:9004";
+    std::string uri = "ws://192.168.120.235:9002";
 
     try {
         // 设置日志输出级别
@@ -202,7 +210,7 @@ void RealSimPage::on_message(client *c, websocketpp::connection_hdl hdl, message
     QJsonObject data = rootObj["data"].toObject();
     if (code == 1) {
         // 收到转发流消息，显示在图上
-        int stream_type = data["stream_type"].toInt();
+        int stream_type = data["type"].toInt();
         flowGraph->addStreamToDisplay(stream_type);
 
         QTimer::singleShot(0, this, [=]() {
@@ -216,9 +224,9 @@ void RealSimPage::on_message(client *c, websocketpp::connection_hdl hdl, message
 }
 
 void RealSimPage::on_open(client *c, websocketpp::connection_hdl hdl) {
-    // 将各流延时序列序列化后发送给servera
+    // 将各流延时序列序列化后发送给server
     std::cout << "client 连接建立！" << std::endl;
-    std::string message = "Hello, WebSocket server!"; // 消息内容
+    std::string message = flowGraph->getSerializedStreamTimeTraces();
     c->send(hdl, message, websocketpp::frame::opcode::text);
 }
 

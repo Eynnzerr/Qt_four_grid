@@ -32,30 +32,13 @@ private:
     QFile *currentConfigFile = nullptr;
     QString fileName;
 
-    QComboBox *boxRealSimSender;
-    QComboBox *boxRealSimReceiver;
-
-    QLineEdit *simulationName;
     QComboBox *boxNodeNum;
     QPlainTextEdit *filePreview;
-
     QPushButton *btnToSimulation;
-    QPushButton *btnGoBack;
 
-    // TODO: delete following members
-    QPushButton *btnAddNode;
-    QPushButton *btnDeleteNode;
-    QListWidget *nodeConfigList;
+    QLineEdit *fromNodeId;
+    QLineEdit *toNodeId;
 
-    QPushButton *btnAddStream;
-    QPushButton *btnDeleteStream;
-    QListWidget *streamConfigList;
-
-    QLineEdit *underwaterComDistance;
-    QLineEdit *wifiComDistance;
-    QLineEdit *opticalComDistance;
-
-    void setupUI();
     void setupNewUI();
     void initSignalSlots();
     void closeEvent(QCloseEvent *event) override;

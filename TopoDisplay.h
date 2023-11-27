@@ -16,6 +16,7 @@
 class TopoDisplay: public QWidget {
     Q_OBJECT
 private:
+    bool isRealSim;
     int currentTime;
     int endTime;
     char *topoFilePath;
@@ -33,7 +34,7 @@ private:
     void resizeEvent(QResizeEvent *event) override;
 public:
     explicit TopoDisplay(QWidget *parent = nullptr);
-    explicit TopoDisplay(QString *simulationName, char *topoFilePath, QWidget *parent = nullptr);
+    explicit TopoDisplay(QString *simulationName, char *topoFilePath, bool isRealSim = false, QWidget *parent = nullptr);
 };
 
 

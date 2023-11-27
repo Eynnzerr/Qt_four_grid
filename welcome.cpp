@@ -4,6 +4,7 @@
 #include "welcome.h"
 
 Welcome::Welcome(QWidget *parent) {
+    setupDialog();
     setupUI();
     initSignalSlots();
 }
@@ -93,26 +94,72 @@ void Welcome::setupUI() {
 
 void Welcome::initSignalSlots() {
     connect(btnNew, &QPushButton::clicked, [=] {
+        QSettings settings("HUST", "FourGrid");
+        settings.setValue("is_real_sim", false);
+
         auto *next = new Configuration;
         close();
         next->show();
     });
     connect(btnHistory, &QPushButton::clicked, [=] {
-        QString dlgTitle="选择已有配置文件"; //对话框标题
-        QString filter="(*.json)"; //文件过滤器
-        QString fileName = QFileDialog::getOpenFileName(this,dlgTitle,"/",filter);
-        if (fileName != nullptr) {
-            auto *next = new FourGrid(fileName.toLatin1().data());
-            close();
-            next->show();
-        }
+        dialog->exec();
     });
     connect(btnRealSim, &QPushButton::clicked, [=] {
-        QString dlgTitle="选择已有配置文件"; //对话框标题
-        QString filter="(*.json)"; //文件过滤器
+//        QString dlgTitle="选择已有配置文件"; //对话框标题
+//        QString filter="(*.json)"; //文件过滤器
+//        QString fileName = QFileDialog::getOpenFileName(this,dlgTitle,"/",filter);
+//        if (fileName != nullptr) {
+//            auto *next = new RealSimPage(fileName.toLatin1().data());
+//            close();
+//            next->show();
+//        }
+        QSettings settings("HUST", "FourGrid");
+        settings.setValue("is_real_sim", true);
+
+        auto *next = new Configuration(true);
+        close();
+        next->show();
+    });
+}
+
+void Welcome::setupDialog() {
+    dialog = new QDialog;
+    buttonGroup = new QButtonGroup;
+    auto toSoftwareSim = new QRadioButton("全软件仿真");
+    auto toHalfRealSim = new QRadioButton("半实物仿真");
+    buttonGroup->addButton(toSoftwareSim, 0);
+    buttonGroup->addButton(toHalfRealSim, 1);
+    toSoftwareSim->setChecked(true);
+    auto dialogLayout = new QVBoxLayout;
+    dialogLayout->addWidget(toSoftwareSim);
+    dialogLayout->addWidget(toHalfRealSim);
+    auto dialogButtons = new QHBoxLayout;
+    auto btnConfirm = new QPushButton("确定");
+    dialogButtons->addStretch();
+    dialogButtons->addWidget(btnConfirm);
+    dialogLayout->addLayout(dialogButtons);
+    dialog->setLayout(dialogLayout);
+    dialog->setWindowTitle("选择历史仿真类型");
+
+    connect(btnConfirm, &QPushButton::clicked, this, [=] {
+        dialog->close();
+
+        QString dlgTitle="选择已有配置文件";
+        QString filter="(*.json)";
         QString fileName = QFileDialog::getOpenFileName(this,dlgTitle,"/",filter);
         if (fileName != nullptr) {
-            auto *next = new RealSimPage(fileName.toLatin1().data());
+            QWidget *next;
+            if (buttonGroup->checkedId() == 0) {
+                QSettings settings("HUST", "FourGrid");
+                settings.setValue("is_real_sim", false);
+
+                next = new FourGrid(fileName.toLatin1().data());
+            } else {
+                QSettings settings("HUST", "FourGrid");
+                settings.setValue("is_real_sim", true);
+
+                next = new RealSimPage(fileName.toLatin1().data());
+            }
             close();
             next->show();
         }

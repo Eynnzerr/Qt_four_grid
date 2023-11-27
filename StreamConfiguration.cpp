@@ -9,8 +9,9 @@ StreamConfiguration::StreamConfiguration(QWidget *parent) {
     initSignalSlots();
 }
 
-StreamConfiguration::StreamConfiguration(QString *simulationName, QWidget *parent) {
+StreamConfiguration::StreamConfiguration(QString *simulationName, bool isRealSim, QWidget *parent) {
     this->simulationName = simulationName;
+    this->isRealSim = isRealSim;
     setupUI();
     initSignalSlots();
 }
@@ -44,23 +45,29 @@ void StreamConfiguration::setupUI() {
 
     filePreview = new QPlainTextEdit;
 
+    // 是否为半实物仿真
+    if (isRealSim) {
+        QSettings settings("HUST", "FourGrid");
+        boxStreamConfig->setCurrentIndex(0);
+        btnToSimulation->setEnabled(true);
+        QJsonObject rootObj;
+        QJsonArray streams;
+        QJsonObject oneStream;
+        oneStream["stream_id"] = 1;
+        oneStream["from_id"] = settings.value("from_node_id").toInt();
+        oneStream["end_id"] = settings.value("to_node_id").toInt();
+        oneStream["steam_type"] = 0;
+        oneStream["begin_time"] = 4;
+        oneStream["end_time"] = 30;
+        streams.append(oneStream);
+        rootObj["stream"] = streams;
+        QJsonDocument doc(rootObj);
+        filePreview->setPlainText(QString::fromStdString(doc.toJson().toStdString()));
+    }
+
     verticalLayout->addLayout(headLayout);
     verticalLayout->addWidget(divider);
     verticalLayout->addWidget(filePreview);
-
-//    boxRouterOption = new QComboBox;
-//    QStringList routerOptions;
-//    routerOptions << "智能路由" << "传统路由";
-//    boxRouterOption->addItems(routerOptions);
-//    boxRouterOption->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    // auto formLayout = new QFormLayout;
-    // formLayout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
-    // formLayout->addRow("流配置:", boxStreamConfig);
-    // formLayout->addRow("路由选择:", boxRouterOption);
-    // formLayout->addRow(filePreview);
-    // formLayout->addRow(buttonLayout);
-    // setLayout(formLayout);
 
     setLayout(verticalLayout);
     setMinimumSize(QSize(800, 600));
@@ -112,7 +119,7 @@ void StreamConfiguration::initSignalSlots() {
             }
         }
 
-        auto *next = new CompletePage(simulationName);
+        auto *next = new CompletePage(simulationName, isRealSim);
         close();
         next->show();
     });

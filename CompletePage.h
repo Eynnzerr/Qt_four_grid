@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "fourgrid.h"
+#include "RealSimPage.h"
 #include <iostream>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -23,6 +24,7 @@
 class CompletePage: public QWidget {
     Q_OBJECT
 private:
+    bool isRealSim;
     char *tracePath;
     QString nodeConfigPath;
     QString streamConfigPath;
@@ -38,7 +40,7 @@ private:
     void setupPipe();
 
 public:
-    explicit CompletePage(QString *simulationName, QWidget *parent = nullptr);
+    explicit CompletePage(QString *simulationName, bool isRealSim = false, QWidget *parent = nullptr);
 };
 
 

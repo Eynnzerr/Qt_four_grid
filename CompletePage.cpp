@@ -4,7 +4,8 @@
 
 #include "CompletePage.h"
 
-CompletePage::CompletePage(QString *simulationName, QWidget *parent) {
+CompletePage::CompletePage(QString *simulationName, bool isRealSim, QWidget *parent) {
+    this->isRealSim = isRealSim;
     nodeConfigPath = QString("../history_configs/nodes/") + simulationName + ".json";
     streamConfigPath = QString("../history_configs/stream/") + simulationName + ".json";
 
@@ -41,7 +42,12 @@ void CompletePage::setupUI() {
 
 void CompletePage::initSignalSlots() {
     connect(btnFinish, &QPushButton::clicked, this, [=] {
-        auto *next = new FourGrid(tracePath);
+        QWidget *next;
+        if (isRealSim) {
+            next = new RealSimPage(tracePath);
+        } else {
+            next = new FourGrid(tracePath);
+        }
         close();
         next->show();
     });

@@ -621,7 +621,7 @@ void Widget::parse_json(const char *filename) {
         int packet_line_type = packetIDtoStreamType[packet_id.at(i)];
         QJsonObject cur_message = aodvMessage[packet_id.at(i)].toObject();
         QStringList packet_trace = cur_message.keys();
-        TimeTrace timeTrace;
+        TimeTrace timeTrace; // timeTrace delay和timestamp 单位都是10ms
         timeTrace.delay = packet_trace.last().chopped(7+2).toInt() - packet_trace.first().chopped(7+2).toInt();
         if (timeTrace.delay <= 0) {
             // 异常数据或发送未成功数据，剔除
@@ -636,18 +636,12 @@ void Widget::parse_json(const char *filename) {
     }
     for (int i = 0; i <= 3; i ++) {
         std::sort(streamTimeTraces[i].begin(), streamTimeTraces[i].end(), compareByTime);
-        qDebug() << "流种类： " << i << ", 对应路径序列:";
-        for (const auto& timeTrace : streamTimeTraces[i]) {
-            qDebug() << "timestamp: " << timeTrace.timestamp << "frames; delay: " << timeTrace.delay << "frames; route: " << timeTrace.trace;
-        }
     }
+    std::cout << "半实物时延数据：\n" << getSerializedStreamTimeTraces() << std::endl;
 
     // 遍历每个包及其经过节点和时间戳
     for (int i = 0; i < packet_id.size(); i++) {
-        // cur_message: { "16320000000TX": 6, "16326865589RX": 10 }
         QJsonObject cur_message = aodvMessage[packet_id.at(i)].toObject();
-
-        // packet_trace: ["16550000000TX", "16550000001RX", "17510000000TX", "17514649165RX"] 单位纳秒10^-9
         QStringList packet_trace = cur_message.keys();
 
         QString frame = packet_trace.at(0);

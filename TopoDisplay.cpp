@@ -11,9 +11,10 @@ TopoDisplay::TopoDisplay(QWidget *parent) {
     initSignalSlots();
 }
 
-TopoDisplay::TopoDisplay(QString *simulationName, char *topoFilePath, QWidget *parent) {
+TopoDisplay::TopoDisplay(QString *simulationName, char *topoFilePath, bool isRealSim, QWidget *parent) {
     this->simulationName = simulationName;
     this->topoFilePath = topoFilePath;
+    this->isRealSim = isRealSim;
     timer = new QTimer(this);
 
     setupUI();
@@ -81,7 +82,7 @@ void TopoDisplay::initSignalSlots() {
         next->show();
     });
     connect(btnGoNext, &QPushButton::clicked, [=] {
-        auto *next = new StreamConfiguration(simulationName);
+        auto *next = new StreamConfiguration(simulationName, isRealSim);
         close();
         next->show();
     });
