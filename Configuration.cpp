@@ -3,162 +3,152 @@
 //
 
 #include "Configuration.h"
+#include <QChartView>
 
-Configuration::Configuration(QWidget *parent): QWidget(parent)
+Configuration::Configuration(bool isRealSim, QWidget *parent): QWidget(parent)
 {
-    setupUI();
+    // setupUI();
+    this->isRealSim = isRealSim;
+    setupNewUI();
     initSignalSlots();
 }
 
 Configuration::~Configuration() = default;
 
-void Configuration::setupUI() {
-    auto formLayout = new QFormLayout;
-    formLayout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+void Configuration::setupNewUI() {
+    auto verticalLayout = new QVBoxLayout;
 
-    // node configs
-    auto nodeConfigTitle = new QLabel("节点参数");
-    nodeConfigTitle->setStyleSheet("QLabel {font-weight: bold; font-size: 20px}");
-    formLayout->addRow(nodeConfigTitle);
+    btnToSimulation = new QPushButton("下一步");
+    btnToSimulation->setStyleSheet("QPushButton {background-color: deepskyblue; color: white;}");
+    btnToSimulation->setEnabled(false); // disabled by default unless configuration is selected.
 
-    btnAddNode = new QPushButton;
-    btnAddNode->setIcon(QIcon(":/res/add.png"));
-    btnAddNode->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
-    btnDeleteNode = new QPushButton;
-    btnDeleteNode->setIcon(QIcon(":/res/subtract.png"));
-    btnDeleteNode->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
-    auto hLayout1 = new QHBoxLayout;
-    hLayout1->addWidget(btnAddNode);
-    hLayout1->addWidget(btnDeleteNode);
-    hLayout1->addStretch();
-    formLayout->addRow(hLayout1);
+    auto label = new QLabel("节点规模:");
+    boxNodeNum = new QComboBox;
+    QStringList numOptions;
+    numOptions << "稀疏规模(16个)" << "标准规模(32个)" << "密集规模(64个)";
+    boxNodeNum->addItems(numOptions);
+    boxNodeNum->setCurrentIndex(-1);
+    boxNodeNum->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    nodeConfigList = new QListWidget;
-    nodeConfigList->setSelectionMode(QAbstractItemView::NoSelection);
-    formLayout->addRow(nodeConfigList);
-//    auto nodeConfigHeader = new QHBoxLayout;
-//    auto nodeNumberHeader = new QLabel("序号");
-//    auto nodeTypeHeader = new QLabel("节点种类");
-//    auto movementHeader = new QLabel("运动方式");
-//    auto positionHeader = new QLabel("初始位置");
-//    nodeConfigHeader->addWidget(nodeNumberHeader);
-//    nodeConfigHeader->addStretch();
-//    nodeConfigHeader->addWidget(nodeTypeHeader);
-//    nodeConfigHeader->addWidget(movementHeader);
-//    nodeConfigHeader->addWidget(positionHeader);
-//    auto itemHeader = new QListWidgetItem(nodeConfigList);
-//    itemHeader->setSizeHint(nodeConfigHeader->sizeHint());
+    auto headLayout = new QHBoxLayout;
+    headLayout->addWidget(label);
+    headLayout->addWidget(boxNodeNum);
+    headLayout->addStretch();
+    headLayout->addWidget(btnToSimulation);
 
-    // channel configs
-    auto channelConfigTitle = new QLabel("信道参数");
-    channelConfigTitle->setStyleSheet("QLabel {font-weight: bold; font-size: 20px}");
-    formLayout->addRow(channelConfigTitle);
+    auto divider = new QFrame(this);
+    divider->setFrameShape(QFrame::HLine);
+    divider->setStyleSheet("QFrame { min-height:3px }");
 
-    btnAddStream = new QPushButton;
-    btnAddStream->setIcon(QIcon(":/res/add.png"));
-    btnAddStream->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
-    btnDeleteStream = new QPushButton;
-    btnDeleteStream->setIcon(QIcon(":/res/subtract.png"));
-    btnDeleteStream->setStyleSheet("QPushButton {background: transparent; border: none} QPushButton:hover {background: grey; border: none}");
-    auto hLayout2 = new QHBoxLayout;
-    hLayout2->addWidget(btnAddStream);
-    hLayout2->addWidget(btnDeleteStream);
-    hLayout2->addStretch();
-    formLayout->addRow(hLayout2);
+    filePreview = new QPlainTextEdit;
 
-    streamConfigList = new QListWidget;
-    streamConfigList->setSelectionMode(QAbstractItemView::NoSelection);
-    formLayout->addRow(streamConfigList);
+    verticalLayout->addLayout(headLayout);
+    if (isRealSim) {
+        auto mapLayout = new QHBoxLayout;
+        fromNodeId = new QLineEdit;
+        fromNodeId->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        fromNodeId->setValidator(new QIntValidator);
+        toNodeId = new QLineEdit;
+        toNodeId->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        toNodeId->setValidator(new QIntValidator);
+        mapLayout->addWidget(new QLabel("映射节点: 起始: "));
+        mapLayout->addWidget(fromNodeId);
+        mapLayout->addWidget(new QLabel("至: "));
+        mapLayout->addWidget(toNodeId);
+        mapLayout->addStretch();
+        verticalLayout->addLayout(mapLayout);
+    }
+    verticalLayout->addWidget(divider);
+    verticalLayout->addWidget(filePreview);
 
-    underwaterComDistance = new QLineEdit;
-    wifiComDistance = new QLineEdit;
-    opticalComDistance = new QLineEdit;
-    formLayout->addRow("水声通信距离:", underwaterComDistance);
-    formLayout->addRow("wifi通信距离:", wifiComDistance);
-    formLayout->addRow("光通信距离:", opticalComDistance);
-
-    // tail buttons
-    btnToSimulation = new QPushButton("start");
-    btnGoBack = new QPushButton("back");
-    auto buttonLayout = new QHBoxLayout;
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(btnGoBack);
-    buttonLayout->addWidget(btnToSimulation);
-    formLayout->addRow(buttonLayout);
-
-    setLayout(formLayout);
+    setLayout(verticalLayout);
     setMinimumSize(QSize(800, 600));
-    setWindowTitle("New Simulation Configs");
+    setWindowTitle("网络场景设置");
 }
 
 void Configuration::initSignalSlots() {
-    connect(btnAddNode, &QPushButton::clicked, this, [=] {
-        auto item = new QListWidgetItem(nodeConfigList);
-        auto itemWidget = new NodeConfigItem(nodeConfigList->count());
-        item->setSizeHint(itemWidget->sizeHint());
-        nodeConfigList->setItemWidget(item, itemWidget);
-    });
-    connect(btnDeleteNode, &QPushButton::clicked, this, [=] {
-        if (nodeConfigList->count() > 0) {
-            QListWidgetItem *item = nodeConfigList->takeItem(nodeConfigList->count() - 1);
-            delete item;
+    connect(boxNodeNum, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [=](int index) {
+        if (index >= 0) {
+            btnToSimulation->setEnabled(true);
+        }
+        if (currentConfigFile != nullptr) {
+            filePreview->clear();
+            currentConfigFile = nullptr;
+        }
+        // TODO 按照用户设置规模从对应预设配置文件中随机选择
+        if (index == 0) {
+            currentConfigFile = new QFile("../default_configs/nodes/sparse/pos_configure_sparse1.json");
+            if (currentConfigFile->open(QIODevice::ReadOnly)) {
+                QTextStream in(currentConfigFile);
+                filePreview->setPlainText(in.readAll());
+                currentConfigFile->close();
+            }
+        } else if (index == 1) {
+            currentConfigFile = new QFile("../default_configs/nodes/common/pos_configure_common1.json");
+            if (currentConfigFile->open(QIODevice::ReadOnly)) {
+                QTextStream in(currentConfigFile);
+                filePreview->setPlainText(in.readAll());
+                currentConfigFile->close();
+            }
+        } else if (index == 2) {
+            currentConfigFile = new QFile("../default_configs/nodes/dense/pos_configure_dense2.json");
+            if (currentConfigFile->open(QIODevice::ReadOnly)) {
+                QTextStream in(currentConfigFile);
+                filePreview->setPlainText(in.readAll());
+                currentConfigFile->close();
+            }
         }
     });
 
-    connect(btnAddStream, &QPushButton::clicked, this, [=] {
-        auto item = new QListWidgetItem(streamConfigList);
-        auto itemWidget = new StreamConfigItem(streamConfigList->count());
-        item->setSizeHint(itemWidget->sizeHint());
-        streamConfigList->setItemWidget(item, itemWidget);
-    });
-    connect(btnDeleteStream, &QPushButton::clicked, this, [=] {
-        if (streamConfigList->count() > 0) {
-            QListWidgetItem *item = streamConfigList->takeItem(streamConfigList->count() - 1);
-            delete item;
-        }
-    });
-
-    connect(btnGoBack, &QPushButton::clicked, this, [=] {
-        auto *next = new Welcome;
-        close();
-        next->show();
-    });
     connect(btnToSimulation, &QPushButton::clicked, this, [=] {
-        // 收集本页面全部写入信息，存入新建json文件中
-        QJsonObject simulationConfig;
-        QJsonArray nodeConfigs, streamConfigs;
-        for (int i = 0; i < nodeConfigList->count(); ++i) {
-            QListWidgetItem *listItem = nodeConfigList->item(i);
-            if (listItem) {
-                auto nodeConfigItem = (NodeConfigItem *) nodeConfigList->itemWidget(listItem);
-                nodeConfigs.append(nodeConfigItem->toJsonObject());
+        // 保存当前所选配置
+        // 自动化生成文件名
+        auto now = std::chrono::system_clock::now();
+        auto timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+        std::ostringstream oss;
+        oss << timestamp << "_" << boxNodeNum->currentIndex();
+        fileName = QString::fromStdString(oss.str());
+        auto configPath = "../history_configs/nodes/" + fileName + ".json";
+
+        if (boxNodeNum->currentIndex() >= 0) {
+            auto configFile = new QFile(configPath);
+            if (configFile->open(QIODevice::WriteOnly)) {
+                QTextStream out(configFile);
+                out << filePreview->toPlainText();
+                configFile->close();
             }
         }
-        simulationConfig["node_config"] = nodeConfigs;
-        for (int i = 0; i < streamConfigList->count(); ++i) {
-            QListWidgetItem *listItem = streamConfigList->item(i);
-            if (listItem) {
-                auto streamConfigItem = (StreamConfigItem *) streamConfigList->itemWidget(listItem);
-                streamConfigs.append(streamConfigItem->toJsonObject());
-            }
-        }
-        simulationConfig["stream_config"] = streamConfigs;
-        simulationConfig["submarine_distance"] = underwaterComDistance->text().toDouble();
-        simulationConfig["wifi_distance"] = wifiComDistance->text().toDouble();
-        simulationConfig["optic_distance"] = opticalComDistance->text().toDouble();
 
-        QJsonDocument jsonDoc(simulationConfig);
-        QFile file("data.json");
-        if (file.open(QIODevice::WriteOnly)) {
-            file.write(jsonDoc.toJson());
-            file.close();
-            qDebug() << "new config file saved successfully.";
-        } else {
-            qDebug() << "Failed to save new config file.";
+        if (isRealSim) {
+            QSettings settings("HUST", "FourGrid");
+            settings.setValue("from_node_id", fromNodeId->text().toInt());
+            settings.setValue("to_node_id", toNodeId->text().toInt());
         }
 
-        auto *next = new FourGrid;
+        // 调用脚本生成拓扑图
+        filePreview->setPlainText("正在生成拓扑图……");
+        filePreview->setReadOnly(true);
+        repaint();
+        auto command = "./ns3.38-a-finish_get_topo-debug --nodeConfigPath=" + configPath;
+        system(command.toLatin1().data());
+        auto *next = new TopoDisplay(&fileName, "./A-FINISH-2d-plot.json", isRealSim); // 拓扑绘图文件名约定死
         close();
         next->show();
     });
+}
+
+void Configuration::closeEvent(QCloseEvent *event) {
+//    QSettings settings("HUST", "FourGrid");
+//    settings.setValue("simulation_name", simulationName->text());
+//    settings.setValue("box_index", boxNodeNum->currentIndex());
+//    settings.setValue("config_text", filePreview->toPlainText());
+    QWidget::closeEvent(event);
+}
+
+void Configuration::showEvent(QShowEvent *event) {
+//    QSettings settings("HUST", "FourGrid");
+//    simulationName->setText(settings.value("simulation_name").toString());
+//    boxNodeNum->setCurrentIndex(settings.value("box_index").toInt());
+//    filePreview->setPlainText(settings.value("config_text").toString());
+    QWidget::showEvent(event);
 }

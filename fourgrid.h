@@ -6,8 +6,11 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QGridLayout>
+#include <QFormLayout>
 #include <QTimer>
+#include <QPlainTextEdit>
 #include "widget.h"
+#include "chartWidget.h"
 
 
 class FourGrid : public QWidget
@@ -15,7 +18,8 @@ class FourGrid : public QWidget
     Q_OBJECT
 
 private:
-    QFrame *frames[2][2];
+    char *tracePath;
+    QFrame *frames[2][2]; // TODO DELETE
     QTimer *timer;
     int currentTime;
     int totalTime;
@@ -24,24 +28,27 @@ private:
     QPushButton *btnStop;
     QProgressBar *progressBar;
 
-    Widget *w1;
-    Widget *w2;
+    QFrame *leftFrame;
+    QFrame *rightTopFrame;
+    QFrame *rightBottomFrame;
 
-    QLabel *label1;
-    QLabel *label2;
-    QLabel *label3;
-    QLabel *label4;
+    QPlainTextEdit *logOutput;
 
-    void setupUI();
+    ChartWidget *chart;
+    Widget *flowGraph;
+
+    // void setupUI();
+    void setupNewUI();
     void initSignalSlots();
     static void addContentToFrame(QFrame *frame, QWidget *widget);
     void addContentToFrame(QWidget *widget, int row, int col);
 
 
-    virtual void resizeEvent(QResizeEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 public:
     explicit FourGrid(QWidget *parent = nullptr);
+    explicit FourGrid(char *tracePath, QWidget *parent = nullptr);
     ~FourGrid() override;
 
 public slots:

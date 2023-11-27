@@ -5,6 +5,8 @@
 #ifndef FOUR_GRID_CONFIGURATION_H
 #define FOUR_GRID_CONFIGURATION_H
 
+#include <chrono>
+#include <sstream>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -15,36 +17,34 @@
 #include <QScrollArea>
 #include <QListWidget>
 #include <QComboBox>
+#include <QPlainTextEdit>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
-#include "NodeConfigItem.h"
-#include "StreamConfigItem.h"
+#include "TopoDisplay.h"
 #include "welcome.h"
 
 class Configuration: public QWidget {
     Q_OBJECT
 private:
+    bool isRealSim = false;
+    QFile *currentConfigFile = nullptr;
+    QString fileName;
+
+    QComboBox *boxNodeNum;
+    QPlainTextEdit *filePreview;
     QPushButton *btnToSimulation;
-    QPushButton *btnGoBack;
 
-    QPushButton *btnAddNode;
-    QPushButton *btnDeleteNode;
-    QListWidget *nodeConfigList;
+    QLineEdit *fromNodeId;
+    QLineEdit *toNodeId;
 
-    QPushButton *btnAddStream;
-    QPushButton *btnDeleteStream;
-    QListWidget *streamConfigList;
-
-    QLineEdit *underwaterComDistance;
-    QLineEdit *wifiComDistance;
-    QLineEdit *opticalComDistance;
-
-    void setupUI();
+    void setupNewUI();
     void initSignalSlots();
+    void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 public:
-    explicit Configuration(QWidget *parent = nullptr);
+    explicit Configuration(bool isRealSim = false, QWidget *parent = nullptr);
     ~Configuration() override;
 };
 

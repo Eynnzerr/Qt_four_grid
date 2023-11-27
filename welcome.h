@@ -12,8 +12,10 @@
 #include <QHBoxLayout>
 #include <QFile>
 #include <QFileDialog>
+#include <QRadioButton>
 #include "fourgrid.h"
 #include "Configuration.h"
+#include "RealSimPage.h"
 
 class Welcome: public QWidget
 {
@@ -23,10 +25,15 @@ private:
     QLabel *subtitle;
     QPushButton *btnNew;
     QPushButton *btnHistory;
+    QPushButton *btnRealSim;
+
+    QDialog *dialog;
+    QButtonGroup *buttonGroup;
 
     // TODO 抽出一个Widget基类，使用模版模式
     void setupUI();
     void initSignalSlots();
+    void setupDialog();
 
 public:
     explicit Welcome(QWidget *parent = nullptr);

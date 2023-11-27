@@ -1,0 +1,36 @@
+{
+    "stream": [
+        {
+            "stream_id": 1,
+            "from_id": 4,
+            "end_id": 5,
+            "steam_type": 1,
+            "begin_time":1,
+            "end_time":5
+        },
+        {
+            "stream_id": 2,
+            "from_id": 6,
+            "end_id": 10,
+            "steam_type": 3,
+            "begin_time":6,
+            "end_time":10
+        },
+        {
+            "stream_id": 3,
+            "from_id": 25,
+            "end_id": 24,
+            "steam_type": 3,
+            "begin_time":11,
+            "end_time":16
+        },
+        {
+            "stream_id": 4,
+            "from_id": 49,
+            "end_id": 53,
+            "steam_type": 1,
+            "begin_time":17,
+            "end_time":26
+        }
+    ]
+}

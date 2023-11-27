@@ -1,0 +1,21 @@
+{
+    "stream": [
+        {
+            "stream_id": 1,
+            "from_id": 10,
+            "end_id": 12,
+            "steam_type": 1,
+            "begin_time":1,
+            "end_time":16
+        },
+        {
+            "stream_id": 2,
+            "from_id": 10,
+            "end_id": 12,
+            "steam_type": 3,
+            "begin_time": 16,
+            "end_time": 20
+        }
+    ],
+    "use_static_routing": true
+}
